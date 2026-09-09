@@ -11,7 +11,7 @@
     <!-- Three.js Engine -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     
-    <!-- GSAP for Smooth Transitions -->
+    <!-- GSAP for Smooth Transitions & Zoom Effects -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
@@ -143,14 +143,14 @@
             pointer-events: none;
         }
 
-        /* Hero Section - Layout linh hoạt */
+        /* Hero Section */
         .hero {
             position: relative;
             height: 100vh;
             width: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: flex-end; /* Mobile: Đẩy bảng chữ xuống đáy màn hình */
+            justify-content: flex-end;
             align-items: center;
             padding: 1.5rem 1rem 2rem 1rem;
         }
@@ -282,14 +282,14 @@
             font-size: 0.95rem;
         }
 
-        /* Tối ưu cho TV / PC Màn hình lớn */
+        /* Responsive Layout Desktop */
         @media (min-width: 992px) {
             nav { padding: 1.2rem 3rem; }
             .logo { font-size: 1.8rem; }
             .nav-links a { font-size: 1.1rem; }
             .hero {
                 justify-content: center;
-                align-items: flex-end; /* Đẩy khung chữ hẳn sang bên phải */
+                align-items: flex-end;
                 padding-right: 10%;
             }
             .hero-content {
@@ -406,24 +406,27 @@
 
         const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
         
-        // Group chứa toàn bộ ngôi sao
+        // Group chứa toàn bộ ngôi sao 3D
         const starGroup = new THREE.Group();
         scene.add(starGroup);
 
-        // Căn chỉnh vị trí & kích thước quả cầu theo màn hình
+        // Tốc độ và kích thước cơ bản dựa theo thiết bị
+        let baseScale = 0.6;
+        let baseZPos = 40;
+
         function adjustLayout() {
             const width = window.innerWidth;
             if (width < 768) {
-                // Mobile: Thu nhỏ quả cầu và nâng lên nửa trên màn hình
-                starGroup.scale.set(0.6, 0.6, 0.6);
-                starGroup.position.set(0, 8, 0);
-                camera.position.set(0, 0, 40);
+                baseScale = 0.55;
+                baseZPos = 40;
+                starGroup.position.set(0, 7, 0);
             } else {
-                // PC / TV Màn hình lớn: Đưa quả cầu sang hẳn bên TAY TRÁI (-14)
-                starGroup.scale.set(0.85, 0.85, 0.85);
+                baseScale = 0.85;
+                baseZPos = 35;
                 starGroup.position.set(-14, 0, 0);
-                camera.position.set(0, 0, 35);
             }
+            starGroup.scale.set(baseScale, baseScale, baseScale);
+            camera.position.set(0, 0, baseZPos);
         }
 
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -511,29 +514,41 @@
             adjustLayout();
         });
 
-        // --- 3. CAMERA TRANSITION ON MENU CLICK ---
+        // --- 3. HIỆU ỨNG PHÓNG TO QUẢ CẦU KHI CHUYỂN MENU ---
+        
+        // Khi bấm 'Tổng Quan': Camera tiến lại gần làm quả cầu PHÓNG TO NỔI BẬT
         document.getElementById('nav-overview').addEventListener('click', () => {
             gsap.to(camera.position, {
-                x: 0,
-                y: 20,
-                z: 30,
+                z: baseZPos - 18, // Đưa camera tiến sát lại gần quả cầu
+                duration: 2,
+                ease: "power2.inOut"
+            });
+            gsap.to(starGroup.scale, {
+                x: baseScale * 1.8, // Phóng to kích thước quả cầu lên 1.8 lần
+                y: baseScale * 1.8,
+                z: baseScale * 1.8,
                 duration: 2,
                 ease: "power2.inOut"
             });
         });
 
+        // Khi quay lại 'Trang Chủ': Thu nhỏ quả cầu về lại kích thước chuẩn
         document.getElementById('nav-home').addEventListener('click', () => {
-            const width = window.innerWidth;
             gsap.to(camera.position, {
-                x: 0,
-                y: 0,
-                z: width < 768 ? 40 : 35,
+                z: baseZPos,
+                duration: 2,
+                ease: "power2.inOut"
+            });
+            gsap.to(starGroup.scale, {
+                x: baseScale,
+                y: baseScale,
+                z: baseScale,
                 duration: 2,
                 ease: "power2.inOut"
             });
         });
 
-        // --- 4. GSAP SCROLLTRIGGER: COLOR CHANGE ---
+        // --- 4. GSAP SCROLLTRIGGER: PHÓNG TO + ĐỔI MÀU KHI CUỘN TRANG ---
         gsap.registerPlugin(ScrollTrigger);
 
         ScrollTrigger.create({
@@ -541,14 +556,34 @@
             start: "top 70%",
             end: "bottom 20%",
             onEnter: () => {
+                // Đổi màu Đỏ Tía
                 gsap.to(coreMaterial.color, { r: 1.0, g: 0.0, b: 0.33, duration: 1.5 });
                 gsap.to(ringMat.color, { r: 1.0, g: 0.0, b: 0.33, duration: 1.5 });
                 gsap.to(particleMaterial.color, { r: 1.0, g: 0.2, b: 0.5, duration: 1.5 });
+                
+                // Phóng to khi cuộn xuống mục Overview
+                gsap.to(starGroup.scale, {
+                    x: baseScale * 1.7,
+                    y: baseScale * 1.7,
+                    z: baseScale * 1.7,
+                    duration: 1.5,
+                    ease: "power2.out"
+                });
             },
             onLeaveBack: () => {
+                // Trở lại màu Xanh Neon
                 gsap.to(coreMaterial.color, { r: 0.0, g: 0.95, b: 1.0, duration: 1.5 });
                 gsap.to(ringMat.color, { r: 0.0, g: 0.95, b: 1.0, duration: 1.5 });
                 gsap.to(particleMaterial.color, { r: 0.0, g: 0.95, b: 1.0, duration: 1.5 });
+
+                // Thu nhỏ lại khi cuộn lên đầu trang
+                gsap.to(starGroup.scale, {
+                    x: baseScale,
+                    y: baseScale,
+                    z: baseScale,
+                    duration: 1.5,
+                    ease: "power2.out"
+                });
             }
         });
     </script>
