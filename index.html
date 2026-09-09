@@ -770,37 +770,60 @@
             return checkResult;
         }
 
-        // --- MÔ ĐUN TỰ ĐỘNG PHÁT HIỆN THAY ĐỔI VÀ ĐẾM NGƯỢC RELOAD ---
-        let currentEtag = null;
+        // --- MÔ ĐUN QUÉT VÀ KIỂM TRA THAY ĐỔI TỪ GITHUB RAW MỖI 10 GIÂY ---
+        const GITHUB_RAW_URL = 'https://raw.githubusercontent.com/theconfig-team/star/refs/heads/main/index.html';
+        let currentContentHash = null;
         let countdownTimer = null;
-        let timeLeft = 10; // Đếm ngược từ 10 giây
+        let timeLeft = 10;
 
+        // Hàm tạo mã Hash kiểm tra thay đổi
+        function simpleHash(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = (hash << 5) - hash + char;
+                hash |= 0;
+            }
+            return hash;
+        }
+
+        // Hàm kiểm tra link Server
         async function monitorServerUpdate() {
             try {
-                // Gửi request HEAD kiểm tra mã ETag hoặc Last-Modified trên Server
-                const response = await fetch(window.location.href, {
-                    method: 'HEAD',
-                    cache: 'no-cache'
+                // Thêm tham số timestamp ?t= để vô hiệu hóa cache trình duyệt hoàn toàn
+                const response = await fetch(`${GITHUB_RAW_URL}?t=${Date.now()}`, {
+                    cache: 'no-store'
                 });
 
-                const newEtag = response.headers.get('etag') || response.headers.get('last-modified');
+                if (!response.ok) return;
 
-                if (currentEtag && newEtag && currentEtag !== newEtag) {
+                const htmlText = await response.text();
+                const newHash = simpleHash(htmlText);
+
+                // Lần đầu tải trang -> Khởi tạo Hash gốc
+                if (currentContentHash === null) {
+                    currentContentHash = newHash;
+                    return;
+                }
+
+                // Phát hiện sự thay đổi Hash so với bản gốc
+                if (newHash !== currentContentHash) {
+                    console.log("Phát hiện phiên bản mã nguồn mới trên Server!");
                     triggerUpdatePopup();
-                } else {
-                    currentEtag = newEtag;
                 }
             } catch (err) {
-                console.error("Lỗi khi kết nối kiểm tra Server:", err);
+                console.error("Lỗi khi quét kiểm tra Server:", err);
             }
         }
 
+        // Kích hoạt Popup thông báo cập nhật
         function triggerUpdatePopup() {
             const modal = document.getElementById('update-popup-modal');
             const card = document.getElementById('update-popup-card');
             const countdownEl = document.getElementById('popup-countdown');
 
-            if (modal.style.display === 'flex') return; // Tránh mở lặp lại
+            // Nếu popup đã hiển thị thì không bật đè lên
+            if (modal.style.display === 'flex') return;
 
             modal.style.display = 'flex';
             setTimeout(() => {
@@ -811,6 +834,7 @@
             timeLeft = 10;
             countdownEl.innerText = `${timeLeft}s`;
 
+            // Bắt đầu đếm ngược 10 giây tự động Reload
             clearInterval(countdownTimer);
             countdownTimer = setInterval(() => {
                 timeLeft--;
@@ -823,11 +847,12 @@
             }, 1000);
         }
 
-        // Nút trong Popup
+        // Sự kiện click nút "TẢI LẠI NGAY"
         document.getElementById('btn-reload-now').addEventListener('click', () => {
             window.location.reload();
         });
 
+        // Sự kiện click nút "BỎ QUA"
         document.getElementById('btn-dismiss-popup').addEventListener('click', () => {
             clearInterval(countdownTimer);
             const modal = document.getElementById('update-popup-modal');
@@ -840,8 +865,10 @@
             }, 400);
         });
 
-        // Bắt đầu quét kiểm tra Server định kỳ mỗi 5 giây
-        setInterval(monitorServerUpdate, 5000);
+        // Tự động quét Server Link sau mỗi 10 giây (10000ms)
+        setInterval(monitorServerUpdate, 10000);
+        // Chạy lần đầu tiên ngay khi vào trang
+        monitorServerUpdate();
 
         // --- HÀM TẠO TEXTURE HẠT HÌNH TRÒN (CIRCLE GLOW) ---
         function createCircleTexture() {
