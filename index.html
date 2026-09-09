@@ -11,7 +11,7 @@
     <!-- Three.js Engine -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     
-    <!-- GSAP & ScrollTrigger -->
+    <!-- GSAP for Smooth Transitions, Animations & ScrollTrigger -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
@@ -97,7 +97,7 @@
             justify-content: space-between;
             align-items: center;
             z-index: 100;
-            background: rgba(3, 7, 18, 0.85);
+            background: rgba(3, 7, 18, 0.8);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(0, 243, 255, 0.2);
         }
@@ -123,6 +123,11 @@
             position: relative;
         }
 
+        .nav-item {
+            position: relative;
+            padding: 0.3rem 0;
+        }
+
         .nav-links a {
             color: var(--text);
             text-decoration: none;
@@ -132,7 +137,6 @@
             letter-spacing: 1px;
             transition: color 0.3s ease;
             display: block;
-            padding: 0.2rem 0;
         }
 
         .nav-links a.active {
@@ -140,10 +144,10 @@
             text-shadow: 0 0 10px var(--primary);
         }
 
-        /* Thanh gạch chân di chuyển hiệu ứng GSAP */
+        /* Thanh Gạch Chân Động */
         .nav-indicator {
             position: absolute;
-            bottom: -4px;
+            bottom: -2px;
             left: 0;
             height: 3px;
             width: 0px;
@@ -153,7 +157,6 @@
             pointer-events: none;
         }
 
-        /* Nút VIEW STAR */
         .headbar-view-star-btn {
             padding: 0.4rem 0.9rem;
             background: linear-gradient(45deg, var(--primary), var(--secondary));
@@ -187,11 +190,16 @@
             pointer-events: none;
         }
 
+        /* Base Section Design */
+        section {
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+            width: 100%;
+        }
+
         /* Hero Section */
         .hero {
-            position: relative;
-            height: 100vh;
-            width: 100%;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
@@ -250,13 +258,18 @@
             transition: 0.3s;
         }
 
+        .cta-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.8);
+        }
+
         /* Content Sections */
         .specs-section {
-            position: relative;
-            z-index: 2;
-            padding: 6rem 5%;
-            min-height: 80vh;
+            padding: 6rem 5% 4rem 5%;
             background: transparent !important;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .section-title {
@@ -274,6 +287,7 @@
             gap: 1.5rem;
             max-width: 1300px;
             margin: 0 auto;
+            width: 100%;
         }
 
         .card {
@@ -281,7 +295,29 @@
             border: 1px solid rgba(0, 243, 255, 0.25);
             border-radius: 12px;
             padding: 1.8rem;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
             backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
         }
 
         .card i {
@@ -303,7 +339,7 @@
             font-size: 0.95rem;
         }
 
-        /* Star Display Region */
+        /* VÙNG HIỂN THỊ STAR KHUNG RIÊNG */
         .star-display-region {
             position: relative;
             z-index: 2;
@@ -333,6 +369,7 @@
             font-family: 'Orbitron', sans-serif;
             font-size: 1.3rem;
             color: var(--primary);
+            text-shadow: 0 0 10px var(--primary);
         }
 
         .close-display-btn {
@@ -341,6 +378,11 @@
             color: #94a3b8;
             font-size: 1.5rem;
             cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-display-btn:hover {
+            color: #ff0055;
         }
 
         .star-preview-box {
@@ -364,6 +406,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
+            text-align: left;
         }
 
         .info-box {
@@ -377,6 +420,7 @@
             display: block;
             font-size: 0.8rem;
             color: #94a3b8;
+            text-transform: uppercase;
         }
 
         .info-box strong {
@@ -389,9 +433,20 @@
             nav { padding: 1rem 3rem; }
             .logo { font-size: 1.8rem; }
             .nav-links a { font-size: 1rem; }
-            .hero { justify-content: center; align-items: flex-end; padding-right: 10%; }
-            .hero-content { text-align: left; max-width: 450px; padding: 2.2rem; }
+            .headbar-view-star-btn { font-size: 0.85rem; padding: 0.5rem 1.2rem; }
+            .hero {
+                justify-content: center;
+                align-items: flex-end;
+                padding-right: 10%;
+            }
+            .hero-content {
+                text-align: left;
+                max-width: 450px;
+                padding: 2.2rem;
+            }
             .hero-content h1 { font-size: 2.8rem; }
+            .hero-content .subtitle { font-size: 1.1rem; }
+            .hero-content p { font-size: 0.95rem; }
         }
     </style>
 </head>
@@ -411,9 +466,9 @@
         <div class="logo">E-STAR</div>
         <div class="nav-links-wrapper">
             <ul class="nav-links">
-                <li><a href="#home" id="nav-home" class="nav-link active">Trang Chủ</a></li>
-                <li><a href="#overview" id="nav-overview" class="nav-link">Tổng Quan</a></li>
-                <li><a href="#specs" id="nav-specs" class="nav-link">Thông Số</a></li>
+                <li class="nav-item"><a href="#home" id="nav-home" class="nav-link active">Trang Chủ</a></li>
+                <li class="nav-item"><a href="#overview" id="nav-overview" class="nav-link">Tổng Quan</a></li>
+                <li class="nav-item"><a href="#specs" id="nav-specs" class="nav-link">Thông Số</a></li>
                 <li>
                     <button class="headbar-view-star-btn" id="btn-view-star">
                         <i class="fa-solid fa-star"></i> VIEW STAR
@@ -428,9 +483,9 @@
     <!-- Canvas 3D Background -->
     <div id="webgl-container"></div>
 
-    <!-- Hero Section (Trang Chủ) -->
+    <!-- Hero Section -->
     <section class="hero" id="home">
-        <div class="hero-content">
+        <div class="hero-content reveal-element">
             <h1>E-STAR</h1>
             <div class="subtitle">THIÊN THỂ SIÊU NÉN LƯỢNG TỬ</div>
             <p>Mô hình cỗ máy năng lượng vũ trụ bán kính 15m. Hoạt động dựa trên lõi quay 16.8 triệu vòng/giây cùng vùng nhiệt độ âm lượng tử, giải phóng dòng hạt sơ cấp vô hạn.</p>
@@ -438,63 +493,85 @@
         </div>
     </section>
 
-    <!-- Overview Section (Tổng Quan) -->
+    <!-- Overview Section -->
     <section class="specs-section" id="overview">
-        <h2 class="section-title">TỔNG QUAN HỆ THỐNG</h2>
-        <div class="card" style="max-width: 900px; margin: 0 auto; text-align: center;">
+        <h2 class="section-title reveal-element">TỔNG QUAN HỆ THỐNG</h2>
+        <div class="card reveal-element" style="max-width: 900px; margin: 0 auto; text-align: center;">
             <i class="fa-solid fa-globe" style="font-size: 2.5rem; margin-bottom: 1rem;"></i>
             <h3>Mô Hình Vũ Trụ Thu Nhỏ</h3>
             <p style="font-size: 1.05rem; line-height: 1.8;">
-                E-Star là sự kết hợp giữa kỹ thuật vật lý lượng tử cực hạn và cơ học không-thời gian. Với khả năng tự duy trì cấu trúc ở nhiệt độ âm và điều khiển dòng hạt sơ cấp, E-Star sẵn sàng hoạt động như một cỗ máy cung cấp năng lượng toàn cầu.
+                E-Star là sự kết hợp giữa kỹ thuật vật lý lượng tử cực hạn và cơ học không-thời gian. Với khả năng tự duy trì cấu trúc ở nhiệt độ âm và điều khiển dòng hạt sơ cấp, E-Star sẵn sàng hoạt động như một cỗ máy cung cấp năng lượng toàn cầu hoặc trạm tổng hợp vật chất ngoài không gian.
             </p>
         </div>
     </section>
 
-    <!-- Specifications Grid (Thông Số) -->
+    <!-- Specifications Grid -->
     <section class="specs-section" id="specs">
-        <h2 class="section-title">THÔNG SỐ KỸ THUẬT VẬT LÝ</h2>
+        <h2 class="section-title reveal-element">THÔNG SỐ KỸ THUẬT VẬT LÝ</h2>
         <div class="grid-container">
-            <div class="card">
-                <i class="fa-solid fa-atom"></i>
-                <h3>Kích Thước & Mật Độ</h3>
-                <p>Bán kính vỏ ngoài cố định 15m. Khối lượng tập trung cực hạn tạo độ dốc trọng lực cao và lực đệm Meissner.</p>
+            <div class="card reveal-element">
+                <div>
+                    <i class="fa-solid fa-atom"></i>
+                    <h3>Kích Thước & Mật Độ</h3>
+                    <p>Bán kính vỏ ngoài cố định 15m. Khối lượng tập trung cực hạn tạo độ dốc trọng lực cao và lực đệm Meissner.</p>
+                </div>
             </div>
-            <div class="card">
-                <i class="fa-solid fa-rotate-right"></i>
-                <h3>Lõi Quay Tốc Độ Cao</h3>
-                <p>Tốc độ quay 16,8 triệu vòng/giây (16,8 MHz) phát ra sóng điện từ cao tần và dải từ trường biến thiên cực đại.</p>
+            <div class="card reveal-element">
+                <div>
+                    <i class="fa-solid fa-rotate-right"></i>
+                    <h3>Lõi Quay Tốc Độ Cao</h3>
+                    <p>Tốc độ quay 16,8 triệu vòng/giây (16,8 MHz) phát ra sóng điện từ cao tần và dải từ trường biến thiên cực đại.</p>
+                </div>
             </div>
-            <div class="card">
-                <i class="fa-solid fa-temperature-arrow-down"></i>
-                <h3>Nhiệt Độ Âm LƯỢNG TỬ</h3>
-                <p>Duy trì môi trường siêu dẫn tại -500.000°C, triệt tiêu sự tỏa nhiệt thông thường và giữ ổn định liên kết hạt.</p>
+            <div class="card reveal-element">
+                <div>
+                    <i class="fa-solid fa-temperature-arrow-down"></i>
+                    <h3>Nhiệt Độ Âm LƯỢNG TỬ</h3>
+                    <p>Duy trì môi trường siêu dẫn tại -500.000°C, triệt tiêu sự tỏa nhiệt thông thường và giữ ổn định liên kết hạt.</p>
+                </div>
             </div>
-            <div class="card">
-                <i class="fa-solid fa-magnet"></i>
-                <h3>Từ Trường Bẫy >200B</h3>
-                <p>Khung từ trường khổng lồ giữ dải proton (p+) và electron (e-) tạo quầng sáng huỳnh quang xanh lam đặc trưng.</p>
+            <div class="card reveal-element">
+                <div>
+                    <i class="fa-solid fa-magnet"></i>
+                    <h3>Từ Trường Bẫy >200B</h3>
+                    <p>Khung từ trường khổng lồ giữ dải proton (p+) và electron (e-) tạo quầng sáng huỳnh quang xanh lam đặc trưng.</p>
+                </div>
             </div>
         </div>
 
-        <!-- View Star Region -->
+        <!-- VÙNG HIỂN THỊ CỦA VIEW STAR -->
         <div class="star-display-region" id="star-display-region">
             <div class="star-display-header">
                 <h3><i class="fa-solid fa-star"></i> VÙNG XEM CHI TIẾT NGÔI SAO E-STAR</h3>
                 <button class="close-display-btn" id="btn-close-star"><i class="fa-solid fa-xmark"></i></button>
             </div>
+
             <div class="star-preview-box" id="star-preview-box"></div>
+
             <div class="star-info-grid">
-                <div class="info-box"><span>Trạng Thái Lõi</span><strong>100% STABLE</strong></div>
-                <div class="info-box"><span>Năng Lượng Phát Ra</span><strong>4.8 x 10²⁶ W</strong></div>
-                <div class="info-box"><span>Tốc Độ Lõi Quay</span><strong>16,800,000 RPM</strong></div>
-                <div class="info-box"><span>Mật Độ Hấp Dẫn</span><strong>9.81 x 10⁵ m/s²</strong></div>
+                <div class="info-box">
+                    <span>Trạng Thái Lõi</span>
+                    <strong>100% STABLE</strong>
+                </div>
+                <div class="info-box">
+                    <span>Năng Lượng Phát Ra</span>
+                    <strong>4.8 x 10²⁶ W</strong>
+                </div>
+                <div class="info-box">
+                    <span>Tốc Độ Lõi Quay</span>
+                    <strong>16,800,000 RPM</strong>
+                </div>
+                <div class="info-box">
+                    <span>Mật Độ Hấp Dẫn</span>
+                    <strong>9.81 x 10⁵ m/s²</strong>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- JavaScript Logic -->
     <script>
-        // --- 1. CIRCLE TEXTURE FOR PARTICLES ---
+        // --- HÀM TẠO TEXTURE HẠT HÌNH TRÒN (CIRCLE GLOW) ---
         function createCircleTexture() {
             const canvas = document.createElement('canvas');
             canvas.width = 64;
@@ -517,7 +594,7 @@
 
         const circleTexture = createCircleTexture();
 
-        // --- 2. LOADING SCREEN ---
+        // --- 1. LOADING SCREEN LOGIC ---
         let progress = 0;
         const progressBar = document.getElementById('progress-bar');
         const loadingText = document.getElementById('loading-text');
@@ -526,6 +603,7 @@
         const loadingInterval = setInterval(() => {
             progress += Math.floor(Math.random() * 12) + 6;
             if (progress > 100) progress = 100;
+            
             progressBar.style.width = progress + '%';
             loadingText.innerText = `INITIALIZING CORE SYSTEM... ${progress}%`;
             
@@ -538,10 +616,11 @@
             }
         }, 100);
 
-        // --- 3. MAIN 3D SCENE ---
+        // --- 2. MAIN 3D SCENE BACKGROUND ---
         const container = document.getElementById('webgl-container');
         const mainScene = new THREE.Scene();
         const mainCamera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+        
         const mainStarGroup = new THREE.Group();
         mainScene.add(mainStarGroup);
 
@@ -568,13 +647,13 @@
         mainRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         container.appendChild(mainRenderer.domElement);
 
-        // Core Sphere
+        // Main Core Sphere
         const coreGeometry = new THREE.SphereGeometry(5, 48, 48);
         const coreMaterial = new THREE.MeshBasicMaterial({ color: 0x00f3ff, wireframe: true });
         const core = new THREE.Mesh(coreGeometry, coreMaterial);
         mainStarGroup.add(core);
 
-        // Inner Core
+        // Main Inner Core
         const innerGeo = new THREE.SphereGeometry(3.2, 32, 32);
         const innerMat = new THREE.MeshBasicMaterial({ color: 0x7000ff, transparent: true, opacity: 0.85 });
         const innerCore = new THREE.Mesh(innerGeo, innerMat);
@@ -630,11 +709,10 @@
         }
         animateMainScene();
 
-        // --- 4. ANIMATION MENU NAVIGATION & SCROLL TRIGGER ---
+        // --- 3. MENU NAVIGATION & INDICATOR ---
         const navLinks = document.querySelectorAll('.nav-link');
         const indicator = document.getElementById('nav-indicator');
 
-        // Hàm trượt gạch chân sang phần phần tử đang được chọn
         function moveIndicator(targetElement) {
             if (!targetElement) return;
             const linkRect = targetElement.getBoundingClientRect();
@@ -649,40 +727,60 @@
             });
         }
 
-        // Hàm kích hoạt màu chữ và gạch chân
         function setActiveNav(activeLink) {
             navLinks.forEach(link => link.classList.remove('active'));
-            activeLink.classList.add('active');
-            moveIndicator(activeLink);
+            if(activeLink) {
+                activeLink.classList.add('active');
+                moveIndicator(activeLink);
+            }
         }
 
-        // Đăng ký ScrollTrigger cập nhật Menu theo vị trí cuộn trang
+        window.addEventListener('load', () => {
+            const initialActive = document.querySelector('.nav-link.active');
+            moveIndicator(initialActive);
+        });
+
+        // --- 4. GSAP SCROLLTRIGGER & SCROLL-SPY ANIMATIONS ---
         gsap.registerPlugin(ScrollTrigger);
 
-        const sections = [
-            { id: "#home", linkId: "#nav-home" },
-            { id: "#overview", linkId: "#nav-overview" },
-            { id: "#specs", linkId: "#nav-specs" }
-        ];
+        const sections = document.querySelectorAll('section');
 
-        sections.forEach(sec => {
+        sections.forEach(section => {
+            const sectionId = section.getAttribute('id');
+            const targetLink = document.querySelector(`.nav-link[href="#${sectionId}"]`);
+
+            // Scroll-Spy: Tự chuyển Tab active & gạch chân khi cuộn tới phần tương ứng
             ScrollTrigger.create({
-                trigger: sec.id,
+                trigger: section,
                 start: "top 50%",
                 end: "bottom 50%",
-                onEnter: () => setActiveNav(document.querySelector(sec.linkId)),
-                onEnterBack: () => setActiveNav(document.querySelector(sec.linkId))
+                onEnter: () => setActiveNav(targetLink),
+                onEnterBack: () => setActiveNav(targetLink)
+            });
+
+            // Scroll Reveal: Hiện nội dung khi cuộn tới, ẩn đi khi cuộn ra ngoài màn hình
+            const reveals = section.querySelectorAll('.reveal-element');
+            reveals.forEach(el => {
+                gsap.fromTo(el, 
+                    { opacity: 0, y: 60, scale: 0.95 },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        scale: 1,
+                        duration: 0.8,
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: el,
+                            start: "top 85%",
+                            end: "bottom 15%",
+                            toggleActions: "play reverse play reverse" // Ẩn khi ra khỏi màn hình, Hiện khi cuộn vào
+                        }
+                    }
+                );
             });
         });
 
-        // Click trên Menu
-        navLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                setActiveNav(e.target);
-            });
-        });
-
-        // Đổi màu & Zoom 3D khi đến khu vực Overview
+        // Đổi màu lõi 3D khi đến khu vực Overview
         ScrollTrigger.create({
             trigger: "#overview",
             start: "top 70%",
@@ -690,7 +788,7 @@
             onEnter: () => {
                 gsap.to(coreMaterial.color, { r: 1.0, g: 0.0, b: 0.33, duration: 1.5 });
                 gsap.to(ringMat.color, { r: 1.0, g: 0.0, b: 0.33, duration: 1.5 });
-                gsap.to(mainStarGroup.scale, { x: baseScale * 1.6, y: baseScale * 1.6, z: baseScale * 1.6, duration: 1.5, ease: "power2.out" });
+                gsap.to(mainStarGroup.scale, { x: baseScale * 1.7, y: baseScale * 1.7, z: baseScale * 1.7, duration: 1.5, ease: "power2.out" });
             },
             onLeaveBack: () => {
                 gsap.to(coreMaterial.color, { r: 0.0, g: 0.95, b: 1.0, duration: 1.5 });
@@ -699,7 +797,18 @@
             }
         });
 
-        // --- 5. SUB 3D SCENE FOR VIEW STAR REGION ---
+        // Click nav linh hoạt
+        document.getElementById('nav-overview').addEventListener('click', () => {
+            gsap.to(mainCamera.position, { z: baseZPos - 18, duration: 2, ease: "power2.inOut" });
+            gsap.to(mainStarGroup.scale, { x: baseScale * 1.8, y: baseScale * 1.8, z: baseScale * 1.8, duration: 2, ease: "power2.inOut" });
+        });
+
+        document.getElementById('nav-home').addEventListener('click', () => {
+            gsap.to(mainCamera.position, { z: baseZPos, duration: 2, ease: "power2.inOut" });
+            gsap.to(mainStarGroup.scale, { x: baseScale, y: baseScale, z: baseScale, duration: 2, ease: "power2.inOut" });
+        });
+
+        // --- 5. TẠO SCENE 3D RIÊNG CHO VÙNG VIEW STAR ---
         const starBox = document.getElementById('star-preview-box');
         const starScene = new THREE.Scene();
         const starCamera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
@@ -775,7 +884,7 @@
         }
         animateStarPreview();
 
-        // --- 6. VIEW STAR BUTTON CONTROLS ---
+        // --- 6. VIEW STAR BUTTON LOGIC ---
         const btnViewStar = document.getElementById('btn-view-star');
         const btnCloseStar = document.getElementById('btn-close-star');
         const starDisplayRegion = document.getElementById('star-display-region');
@@ -786,6 +895,7 @@
                 starDisplayRegion.style.opacity = '1';
                 resizeStarPreview();
             }, 10);
+
             starDisplayRegion.scrollIntoView({ behavior: 'smooth' });
         });
 
@@ -794,11 +904,6 @@
             setTimeout(() => {
                 starDisplayRegion.style.display = 'none';
             }, 500);
-        });
-
-        window.addEventListener('load', () => {
-            const initialActive = document.querySelector('.nav-link.active');
-            moveIndicator(initialActive);
         });
 
         window.addEventListener('resize', () => {
