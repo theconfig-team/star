@@ -11,7 +11,7 @@
     <!-- Three.js Engine -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     
-    <!-- GSAP for Smooth Transitions & Zoom Effects -->
+    <!-- GSAP for Smooth Transitions & Navigation Line Animation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
@@ -111,11 +111,22 @@
             letter-spacing: 2px;
         }
 
+        /* Nav Container có chứa thanh gạch chân chạy động */
+        .nav-links-wrapper {
+            position: relative;
+        }
+
         .nav-links {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 1.5rem;
             list-style: none;
+            position: relative;
+        }
+
+        .nav-item {
+            position: relative;
+            padding: 0.3rem 0;
         }
 
         .nav-links a {
@@ -125,15 +136,30 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
-            transition: all 0.3s;
+            transition: color 0.3s ease;
+            display: block;
         }
 
-        .nav-links a:hover {
-            color: var(--primary);
-            text-shadow: 0 0 8px var(--primary);
+        /* Màu xanh neon + phát sáng cho mục đang chọn */
+        .nav-links a.active {
+            color: var(--primary) !important;
+            text-shadow: 0 0 10px var(--primary);
         }
 
-        /* Nút VIEW STAR đặt trên Headbar */
+        /* Thanh gạch chân động (Sliding Indicator) */
+        .nav-indicator {
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            height: 3px;
+            width: 0px;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary), 0 0 18px var(--primary);
+            border-radius: 2px;
+            pointer-events: none;
+        }
+
+        /* Nút VIEW STAR trên Headbar */
         .headbar-view-star-btn {
             padding: 0.4rem 0.9rem;
             background: linear-gradient(45deg, var(--primary), var(--secondary));
@@ -434,17 +460,20 @@
     <!-- Navigation Menu (Headbar) -->
     <nav>
         <div class="logo">E-STAR</div>
-        <ul class="nav-links">
-            <li><a href="#home" id="nav-home">Trang Chủ</a></li>
-            <li><a href="#overview" id="nav-overview">Tổng Quan</a></li>
-            <li><a href="#specs">Thông Số</a></li>
-            <!-- NÚT VIEW STAR ĐÃ ĐƯỢC ĐẶT LÊN HEADBAR -->
-            <li>
-                <button class="headbar-view-star-btn" id="btn-view-star">
-                    <i class="fa-solid fa-star"></i> VIEW STAR
-                </button>
-            </li>
-        </ul>
+        <div class="nav-links-wrapper">
+            <ul class="nav-links">
+                <li class="nav-item"><a href="#home" id="nav-home" class="nav-link active">Trang Chủ</a></li>
+                <li class="nav-item"><a href="#overview" id="nav-overview" class="nav-link">Tổng Quan</a></li>
+                <li class="nav-item"><a href="#specs" id="nav-specs" class="nav-link">Thông Số</a></li>
+                <li>
+                    <button class="headbar-view-star-btn" id="btn-view-star">
+                        <i class="fa-solid fa-star"></i> VIEW STAR
+                    </button>
+                </li>
+            </ul>
+            <!-- Thanh Gạch Chân Động -->
+            <div class="nav-indicator" id="nav-indicator"></div>
+        </div>
     </nav>
 
     <!-- Canvas 3D Background -->
@@ -486,7 +515,7 @@
             <div class="card">
                 <div>
                     <i class="fa-solid fa-rotate-right"></i>
-                    <h3>Lõi Quay Tốc Tốc Độ Cao</h3>
+                    <h3>Lõi Quay Tốc Độ Cao</h3>
                     <p>Tốc độ quay 16,8 triệu vòng/giây (16,8 MHz) phát ra sóng điện từ cao tần và dải từ trường biến thiên cực đại.</p>
                 </div>
             </div>
@@ -538,6 +567,30 @@
 
     <!-- JavaScript Logic -->
     <script>
+        // --- HÀM TẠO TEXTURE HẠT HÌNH TRÒN (CIRCLE GLOW) ---
+        function createCircleTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 64;
+            canvas.height = 64;
+            const ctx = canvas.getContext('2d');
+            
+            const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+            gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+            gradient.addColorStop(0.3, 'rgba(0, 243, 255, 0.8)');
+            gradient.addColorStop(0.8, 'rgba(0, 243, 255, 0.2)');
+            gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(32, 32, 32, 0, Math.PI * 2);
+            ctx.fill();
+            
+            const texture = new THREE.CanvasTexture(canvas);
+            return texture;
+        }
+
+        const circleTexture = createCircleTexture();
+
         // --- 1. LOADING SCREEN LOGIC ---
         let progress = 0;
         const progressBar = document.getElementById('progress-bar');
@@ -603,7 +656,7 @@
         const innerCore = new THREE.Mesh(innerGeo, innerMat);
         mainStarGroup.add(innerCore);
 
-        // Particles
+        // Hạt Bụi e- (Đã áp dụng Texture Hình Tròn + Blending)
         const particleCount = window.innerWidth < 768 ? 1000 : 1800;
         const geometry = new THREE.BufferGeometry();
         const positions = new Float32Array(particleCount * 3);
@@ -618,11 +671,18 @@
         }
 
         geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        const particleMaterial = new THREE.PointsMaterial({ size: 0.28, color: 0x00f3ff, transparent: true, opacity: 0.75 });
+        const particleMaterial = new THREE.PointsMaterial({
+            size: 0.55,
+            map: circleTexture,
+            transparent: true,
+            opacity: 0.85,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
         const particles = new THREE.Points(geometry, particleMaterial);
         mainStarGroup.add(particles);
 
-        // Rings (Quyst đạo ngoài)
+        // Rings (Quỹ đạo ngoài)
         const ringGeo = new THREE.TorusGeometry(10.5, 0.1, 16, 80);
         const ringMat = new THREE.MeshBasicMaterial({ color: 0x00f3ff, transparent: true, opacity: 0.45 });
         const ring1 = new THREE.Mesh(ringGeo, ringMat);
@@ -646,15 +706,51 @@
         }
         animateMainScene();
 
-        // --- 3. MENU NAVIGATION ---
-        document.getElementById('nav-overview').addEventListener('click', () => {
+        // --- 3. MENU NAVIGATION WITH SLIDING GẠCH CHÂN ANIMATION ---
+        const navLinks = document.querySelectorAll('.nav-link');
+        const indicator = document.getElementById('nav-indicator');
+
+        function moveIndicator(targetElement) {
+            if (!targetElement) return;
+            const linkRect = targetElement.getBoundingClientRect();
+            const containerRect = targetElement.closest('.nav-links-wrapper').getBoundingClientRect();
+            
+            const leftOffset = linkRect.left - containerRect.left;
+            
+            gsap.to(indicator, {
+                x: leftOffset,
+                width: linkRect.width,
+                duration: 0.4,
+                ease: "power2.out"
+            });
+        }
+
+        function setActiveNav(activeLink) {
+            navLinks.forEach(link => link.classList.remove('active'));
+            activeLink.classList.add('active');
+            moveIndicator(activeLink);
+        }
+
+        // Khởi tạo vị trí gạch chân ban đầu
+        window.addEventListener('load', () => {
+            const initialActive = document.querySelector('.nav-link.active');
+            moveIndicator(initialActive);
+        });
+
+        document.getElementById('nav-overview').addEventListener('click', (e) => {
+            setActiveNav(e.target);
             gsap.to(mainCamera.position, { z: baseZPos - 18, duration: 2, ease: "power2.inOut" });
             gsap.to(mainStarGroup.scale, { x: baseScale * 1.8, y: baseScale * 1.8, z: baseScale * 1.8, duration: 2, ease: "power2.inOut" });
         });
 
-        document.getElementById('nav-home').addEventListener('click', () => {
+        document.getElementById('nav-home').addEventListener('click', (e) => {
+            setActiveNav(e.target);
             gsap.to(mainCamera.position, { z: baseZPos, duration: 2, ease: "power2.inOut" });
             gsap.to(mainStarGroup.scale, { x: baseScale, y: baseScale, z: baseScale, duration: 2, ease: "power2.inOut" });
+        });
+
+        document.getElementById('nav-specs').addEventListener('click', (e) => {
+            setActiveNav(e.target);
         });
 
         // --- 4. GSAP SCROLLTRIGGER ---
@@ -667,13 +763,11 @@
             onEnter: () => {
                 gsap.to(coreMaterial.color, { r: 1.0, g: 0.0, b: 0.33, duration: 1.5 });
                 gsap.to(ringMat.color, { r: 1.0, g: 0.0, b: 0.33, duration: 1.5 });
-                gsap.to(particleMaterial.color, { r: 1.0, g: 0.2, b: 0.5, duration: 1.5 });
                 gsap.to(mainStarGroup.scale, { x: baseScale * 1.7, y: baseScale * 1.7, z: baseScale * 1.7, duration: 1.5, ease: "power2.out" });
             },
             onLeaveBack: () => {
                 gsap.to(coreMaterial.color, { r: 0.0, g: 0.95, b: 1.0, duration: 1.5 });
                 gsap.to(ringMat.color, { r: 0.0, g: 0.95, b: 1.0, duration: 1.5 });
-                gsap.to(particleMaterial.color, { r: 0.0, g: 0.95, b: 1.0, duration: 1.5 });
                 gsap.to(mainStarGroup.scale, { x: baseScale, y: baseScale, z: baseScale, duration: 1.5, ease: "power2.out" });
             }
         });
@@ -703,7 +797,7 @@
         const subInner = new THREE.Mesh(subInnerGeo, subInnerMat);
         subStarGroup.add(subInner);
 
-        // Hạt Hào Quang
+        // Hạt Bụi e- Hình Tròn Trong Vùng View Star
         const subPCount = 800;
         const subPGeo = new THREE.BufferGeometry();
         const subPPos = new Float32Array(subPCount * 3);
@@ -716,7 +810,14 @@
             subPPos[i+2] = r * Math.cos(phi);
         }
         subPGeo.setAttribute('position', new THREE.BufferAttribute(subPPos, 3));
-        const subPMat = new THREE.PointsMaterial({ size: 0.22, color: 0x00f3ff, transparent: true, opacity: 0.8 });
+        const subPMat = new THREE.PointsMaterial({
+            size: 0.45,
+            map: circleTexture,
+            transparent: true,
+            opacity: 0.85,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
         const subParticles = new THREE.Points(subPGeo, subPMat);
         subStarGroup.add(subParticles);
 
@@ -779,6 +880,9 @@
             mainRenderer.setSize(window.innerWidth, window.innerHeight);
             adjustLayout();
             resizeStarPreview();
+            
+            const activeLink = document.querySelector('.nav-link.active');
+            moveIndicator(activeLink);
         });
     </script>
 </body>
