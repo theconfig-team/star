@@ -86,7 +86,7 @@
             font-family: 'Orbitron', sans-serif;
         }
 
-        /* Navigation Menu */
+        /* Navigation Menu Giữ Nguyên */
         nav {
             position: fixed;
             top: 0;
@@ -132,7 +132,7 @@
             text-shadow: 0 0 8px var(--primary);
         }
 
-        /* Canvas 3D Cố định toàn màn hình */
+        /* Canvas 3D Cố định toàn màn hình Giữ Nguyên */
         #webgl-container {
             position: fixed;
             top: 0;
@@ -285,16 +285,12 @@
             font-size: 0.95rem;
         }
 
-        /* Card Ngoài Cùng: View Star */
+        /* Card Ngoài Cùng: VIEW STAR */
         .card-view-star {
             background: rgba(112, 0, 255, 0.25);
             border: 1px solid var(--primary);
             align-items: center;
             text-align: center;
-        }
-
-        .card-view-star::before {
-            background: linear-gradient(to bottom, var(--primary), var(--secondary));
         }
 
         .view-star-btn {
@@ -318,19 +314,19 @@
             box-shadow: 0 0 25px rgba(0, 243, 255, 0.8);
         }
 
-        /* Vùng Hiển Thị Star Chi Tiết */
+        /* VÙNG HIỂN THỊ DÀNH RIÊNG CHO NGÔI SAO (STAR DISPLAY CONTAINER) */
         .star-display-region {
             position: relative;
             z-index: 2;
-            max-width: 1100px;
+            max-width: 1000px;
             margin: 3rem auto 0 auto;
-            padding: 2rem;
-            background: rgba(3, 7, 18, 0.85);
+            padding: 1.5rem;
+            background: rgba(3, 7, 18, 0.9);
             border: 1px solid var(--primary);
             border-radius: 16px;
             backdrop-filter: blur(16px);
-            box-shadow: 0 0 40px rgba(0, 243, 255, 0.2);
-            display: none;
+            box-shadow: 0 0 40px rgba(0, 243, 255, 0.25);
+            display: none; /* Mặc định ẩn, hiện lên khi click View Star */
             opacity: 0;
             transition: opacity 0.5s ease;
         }
@@ -340,13 +336,13 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid rgba(0, 243, 255, 0.3);
-            padding-bottom: 1rem;
-            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            margin-bottom: 1.2rem;
         }
 
         .star-display-header h3 {
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             color: var(--primary);
             text-shadow: 0 0 10px var(--primary);
         }
@@ -364,15 +360,33 @@
             color: #ff0055;
         }
 
+        /* Khung chứa riêng Canvas vẽ Ngôi Sao */
+        .star-preview-box {
+            width: 100%;
+            height: 350px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            margin-bottom: 1.2rem;
+        }
+
+        .star-preview-box canvas {
+            width: 100% !important;
+            height: 100% !important;
+            display: block;
+        }
+
         .star-info-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.2rem;
+            gap: 1rem;
             text-align: left;
         }
 
         .info-box {
-            background: rgba(15, 23, 42, 0.6);
+            background: rgba(15, 23, 42, 0.8);
             padding: 1rem;
             border-radius: 8px;
             border-left: 3px solid var(--secondary);
@@ -387,7 +401,7 @@
 
         .info-box strong {
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             color: #fff;
         }
 
@@ -423,7 +437,7 @@
         <div id="loading-text">INITIALIZING CORE SYSTEM... 0%</div>
     </div>
 
-    <!-- Navigation -->
+    <!-- Navigation Menu (Giữ Nguyên) -->
     <nav>
         <div class="logo">E-STAR</div>
         <ul class="nav-links">
@@ -433,7 +447,7 @@
         </ul>
     </nav>
 
-    <!-- 3D Canvas Container Cố Định Nền -->
+    <!-- Canvas 3D Nền Cố Định Toàn Màn Hình (Giữ Nguyên) -->
     <div id="webgl-container"></div>
 
     <!-- Hero Section -->
@@ -491,12 +505,12 @@
                 </div>
             </div>
 
-            <!-- Nút Ngoài Cùng: VIEW STAR -->
+            <!-- Nút VIEW STAR Ở Ngoài Cùng -->
             <div class="card card-view-star">
                 <div>
                     <i class="fa-solid fa-star" style="font-size: 2.2rem; color: #fff;"></i>
-                    <h3>CHẾ ĐỘ XEM STAR</h3>
-                    <p>Kích hoạt góc nhìn chuyên sâu và bảng phân tích dữ liệu trực tiếp từ lõi E-Star.</p>
+                    <h3>XEM STAR ISOLATED</h3>
+                    <p>Kích hoạt vùng hiển thị chuyên biệt chỉ để xem chi tiết Ngôi Sao E-Star.</p>
                 </div>
                 <button class="view-star-btn" id="btn-view-star">
                     <i class="fa-solid fa-eye"></i> VIEW STAR
@@ -504,27 +518,31 @@
             </div>
         </div>
 
-        <!-- Vùng Hiển Thị Trạng Thái Star -->
+        <!-- VÙNG CHIẾN DỊCH CHỈ ĐỂ HIỂN THỊ MỖI NGÔI SAO (STAR DISPLAY CONTAINER) -->
         <div class="star-display-region" id="star-display-region">
             <div class="star-display-header">
-                <h3><i class="fa-solid fa-chart-line"></i> DỮ LIỆU LÕI E-STAR CORE</h3>
+                <h3><i class="fa-solid fa-star"></i> VÙNG XEM CHI TIẾT NGÔI SAO E-STAR</h3>
                 <button class="close-display-btn" id="btn-close-star"><i class="fa-solid fa-xmark"></i></button>
             </div>
+
+            <!-- Khung vẽ độc lập Ngôi Sao 3D -->
+            <div class="star-preview-box" id="star-preview-box"></div>
+
             <div class="star-info-grid">
                 <div class="info-box">
-                    <span>Trạng thái hoạt động</span>
+                    <span>Trạng Thái Lõi</span>
                     <strong>100% STABLE</strong>
                 </div>
                 <div class="info-box">
-                    <span>Năng lượng phát ra</span>
+                    <span>Năng Lượng Phát Ra</span>
                     <strong>4.8 x 10²⁶ W</strong>
                 </div>
                 <div class="info-box">
-                    <span>Tốc độ lõi quay</span>
+                    <span>Tốc Độ Lõi Quay</span>
                     <strong>16,800,000 RPM</strong>
                 </div>
                 <div class="info-box">
-                    <span>Mật độ trường hấp dẫn</span>
+                    <span>Mật Độ Hấp Dẫn</span>
                     <strong>9.81 x 10⁵ m/s²</strong>
                 </div>
             </div>
@@ -555,14 +573,13 @@
             }
         }, 100);
 
-        // --- 2. THREE.JS 3D SCENE SETUP ---
+        // --- 2. MAIN 3D SCENE BACKGROUND (Mô hình cũ tràn nền) ---
         const container = document.getElementById('webgl-container');
-        const scene = new THREE.Scene();
-
-        const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const mainScene = new THREE.Scene();
+        const mainCamera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
         
-        const starGroup = new THREE.Group();
-        scene.add(starGroup);
+        const mainStarGroup = new THREE.Group();
+        mainScene.add(mainStarGroup);
 
         let baseScale = 0.6;
         let baseZPos = 40;
@@ -572,41 +589,34 @@
             if (width < 768) {
                 baseScale = 0.55;
                 baseZPos = 40;
-                starGroup.position.set(0, 7, 0);
+                mainStarGroup.position.set(0, 7, 0);
             } else {
                 baseScale = 0.85;
                 baseZPos = 35;
-                starGroup.position.set(-14, 0, 0);
+                mainStarGroup.position.set(-14, 0, 0);
             }
-            starGroup.scale.set(baseScale, baseScale, baseScale);
-            camera.position.set(0, 0, baseZPos);
+            mainStarGroup.scale.set(baseScale, baseScale, baseScale);
+            mainCamera.position.set(0, 0, baseZPos);
         }
 
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        container.appendChild(renderer.domElement);
+        const mainRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        mainRenderer.setSize(window.innerWidth, window.innerHeight);
+        mainRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.appendChild(mainRenderer.domElement);
 
-        // Core Sphere
+        // Main Core Sphere
         const coreGeometry = new THREE.SphereGeometry(5, 48, 48);
-        const coreMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00f3ff,
-            wireframe: true
-        });
+        const coreMaterial = new THREE.MeshBasicMaterial({ color: 0x00f3ff, wireframe: true });
         const core = new THREE.Mesh(coreGeometry, coreMaterial);
-        starGroup.add(core);
+        mainStarGroup.add(core);
 
-        // Inner Core
+        // Main Inner Core
         const innerGeo = new THREE.SphereGeometry(3.2, 32, 32);
-        const innerMat = new THREE.MeshBasicMaterial({
-            color: 0x7000ff,
-            transparent: true,
-            opacity: 0.85
-        });
+        const innerMat = new THREE.MeshBasicMaterial({ color: 0x7000ff, transparent: true, opacity: 0.85 });
         const innerCore = new THREE.Mesh(innerGeo, innerMat);
-        starGroup.add(innerCore);
+        mainStarGroup.add(innerCore);
 
-        // Particle Swarm
+        // Particles
         const particleCount = window.innerWidth < 768 ? 1000 : 1800;
         const geometry = new THREE.BufferGeometry();
         const positions = new Float32Array(particleCount * 3);
@@ -615,21 +625,15 @@
             const r = 6.5 + Math.random() * 7.5;
             const theta = Math.random() * Math.PI * 2;
             const phi = Math.acos((Math.random() * 2) - 1);
-
             positions[i] = r * Math.sin(phi) * Math.cos(theta);
             positions[i+1] = r * Math.sin(phi) * Math.sin(theta);
             positions[i+2] = r * Math.cos(phi);
         }
 
         geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        const particleMaterial = new THREE.PointsMaterial({
-            size: 0.28,
-            color: 0x00f3ff,
-            transparent: true,
-            opacity: 0.75
-        });
+        const particleMaterial = new THREE.PointsMaterial({ size: 0.28, color: 0x00f3ff, transparent: true, opacity: 0.75 });
         const particles = new THREE.Points(geometry, particleMaterial);
-        starGroup.add(particles);
+        mainStarGroup.add(particles);
 
         // Rings
         const ringGeo = new THREE.TorusGeometry(10.5, 0.1, 16, 80);
@@ -638,86 +642,35 @@
         const ring2 = new THREE.Mesh(ringGeo, ringMat);
         ring1.rotation.x = Math.PI / 3;
         ring2.rotation.y = Math.PI / 4;
-        starGroup.add(ring1);
-        starGroup.add(ring2);
+        mainStarGroup.add(ring1);
+        mainStarGroup.add(ring2);
 
         adjustLayout();
 
-        // Animation Loop
-        function animate() {
-            requestAnimationFrame(animate);
-
+        function animateMainScene() {
+            requestAnimationFrame(animateMainScene);
             core.rotation.y += 0.015;
             core.rotation.x += 0.005;
             innerCore.rotation.y -= 0.01;
             particles.rotation.y += 0.002;
             ring1.rotation.z += 0.004;
             ring2.rotation.x += 0.004;
-
-            renderer.render(scene, camera);
+            mainRenderer.render(mainScene, mainCamera);
         }
-        animate();
-
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            adjustLayout();
-        });
+        animateMainScene();
 
         // --- 3. MENU NAVIGATION ---
         document.getElementById('nav-overview').addEventListener('click', () => {
-            gsap.to(camera.position, { z: baseZPos - 18, duration: 2, ease: "power2.inOut" });
-            gsap.to(starGroup.scale, { x: baseScale * 1.8, y: baseScale * 1.8, z: baseScale * 1.8, duration: 2, ease: "power2.inOut" });
+            gsap.to(mainCamera.position, { z: baseZPos - 18, duration: 2, ease: "power2.inOut" });
+            gsap.to(mainStarGroup.scale, { x: baseScale * 1.8, y: baseScale * 1.8, z: baseScale * 1.8, duration: 2, ease: "power2.inOut" });
         });
 
         document.getElementById('nav-home').addEventListener('click', () => {
-            gsap.to(camera.position, { z: baseZPos, duration: 2, ease: "power2.inOut" });
-            gsap.to(starGroup.scale, { x: baseScale, y: baseScale, z: baseScale, duration: 2, ease: "power2.inOut" });
+            gsap.to(mainCamera.position, { z: baseZPos, duration: 2, ease: "power2.inOut" });
+            gsap.to(mainStarGroup.scale, { x: baseScale, y: baseScale, z: baseScale, duration: 2, ease: "power2.inOut" });
         });
 
-        // --- 4. VIEW STAR BUTTON LOGIC ---
-        const btnViewStar = document.getElementById('btn-view-star');
-        const btnCloseStar = document.getElementById('btn-close-star');
-        const starDisplayRegion = document.getElementById('star-display-region');
-
-        btnViewStar.addEventListener('click', () => {
-            // Mở vùng hiển thị thông tin Star
-            starDisplayRegion.style.display = 'block';
-            setTimeout(() => {
-                starDisplayRegion.style.opacity = '1';
-            }, 10);
-
-            // Phóng to quả cầu 3D để tập trung quan sát
-            gsap.to(starGroup.scale, {
-                x: baseScale * 2.2,
-                y: baseScale * 2.2,
-                z: baseScale * 2.2,
-                duration: 1.5,
-                ease: "power2.out"
-            });
-
-            // Đổi màu hiệu ứng khi soi Ngôi sao
-            gsap.to(coreMaterial.color, { r: 1.0, g: 0.8, b: 0.0, duration: 1 });
-            gsap.to(particleMaterial.color, { r: 1.0, g: 0.5, b: 0.0, duration: 1 });
-
-            // Cuộn mượt tới bảng thông tin
-            starDisplayRegion.scrollIntoView({ behavior: 'smooth' });
-        });
-
-        btnCloseStar.addEventListener('click', () => {
-            starDisplayRegion.style.opacity = '0';
-            setTimeout(() => {
-                starDisplayRegion.style.display = 'none';
-            }, 500);
-
-            // Phục hồi kích thước và màu sắc ban đầu
-            gsap.to(starGroup.scale, { x: baseScale * 1.7, y: baseScale * 1.7, z: baseScale * 1.7, duration: 1.2 });
-            gsap.to(coreMaterial.color, { r: 1.0, g: 0.0, b: 0.33, duration: 1 });
-            gsap.to(particleMaterial.color, { r: 1.0, g: 0.2, b: 0.5, duration: 1 });
-        });
-
-        // --- 5. GSAP SCROLLTRIGGER ---
+        // --- 4. GSAP SCROLLTRIGGER FOR MAIN BACKGROUND ---
         gsap.registerPlugin(ScrollTrigger);
 
         ScrollTrigger.create({
@@ -728,28 +681,104 @@
                 gsap.to(coreMaterial.color, { r: 1.0, g: 0.0, b: 0.33, duration: 1.5 });
                 gsap.to(ringMat.color, { r: 1.0, g: 0.0, b: 0.33, duration: 1.5 });
                 gsap.to(particleMaterial.color, { r: 1.0, g: 0.2, b: 0.5, duration: 1.5 });
-                
-                gsap.to(starGroup.scale, {
-                    x: baseScale * 1.7,
-                    y: baseScale * 1.7,
-                    z: baseScale * 1.7,
-                    duration: 1.5,
-                    ease: "power2.out"
-                });
+                gsap.to(mainStarGroup.scale, { x: baseScale * 1.7, y: baseScale * 1.7, z: baseScale * 1.7, duration: 1.5, ease: "power2.out" });
             },
             onLeaveBack: () => {
                 gsap.to(coreMaterial.color, { r: 0.0, g: 0.95, b: 1.0, duration: 1.5 });
                 gsap.to(ringMat.color, { r: 0.0, g: 0.95, b: 1.0, duration: 1.5 });
                 gsap.to(particleMaterial.color, { r: 0.0, g: 0.95, b: 1.0, duration: 1.5 });
-
-                gsap.to(starGroup.scale, {
-                    x: baseScale,
-                    y: baseScale,
-                    z: baseScale,
-                    duration: 1.5,
-                    ease: "power2.out"
-                });
+                gsap.to(mainStarGroup.scale, { x: baseScale, y: baseScale, z: baseScale, duration: 1.5, ease: "power2.out" });
             }
+        });
+
+        // --- 5. TẠO KHUNG CẢNH 3D RIÊNG TRONG VÙNG HIỂN THỊ STAR (STAR PREVIEW) ---
+        const starBox = document.getElementById('star-preview-box');
+        const starScene = new THREE.Scene();
+        const starCamera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
+        starCamera.position.z = 22;
+
+        const starRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        starRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        starBox.appendChild(starRenderer.domElement);
+
+        const subStarGroup = new THREE.Group();
+        starScene.add(subStarGroup);
+
+        // Core Ngôi Sao Độc Lập
+        const subCoreGeo = new THREE.SphereGeometry(3.5, 32, 32);
+        const subCoreMat = new THREE.MeshBasicMaterial({ color: 0x00f3ff, wireframe: true });
+        const subCore = new THREE.Mesh(subCoreGeo, subCoreMat);
+        subStarGroup.add(subCore);
+
+        const subInnerGeo = new THREE.SphereGeometry(2.2, 24, 24);
+        const subInnerMat = new THREE.MeshBasicMaterial({ color: 0x7000ff, transparent: true, opacity: 0.85 });
+        const subInner = new THREE.Mesh(subInnerGeo, subInnerMat);
+        subStarGroup.add(subInner);
+
+        // Hào quang
+        const subPCount = 600;
+        const subPGeo = new THREE.BufferGeometry();
+        const subPPos = new Float32Array(subPCount * 3);
+        for (let i = 0; i < subPCount * 3; i += 3) {
+            const r = 4.5 + Math.random() * 4;
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos((Math.random() * 2) - 1);
+            subPPos[i] = r * Math.sin(phi) * Math.cos(theta);
+            subPPos[i+1] = r * Math.sin(phi) * Math.sin(theta);
+            subPPos[i+2] = r * Math.cos(phi);
+        }
+        subPGeo.setAttribute('position', new THREE.BufferAttribute(subPPos, 3));
+        const subPMat = new THREE.PointsMaterial({ size: 0.22, color: 0x00f3ff, transparent: true, opacity: 0.8 });
+        const subParticles = new THREE.Points(subPGeo, subPMat);
+        subStarGroup.add(subParticles);
+
+        function resizeStarPreview() {
+            const width = starBox.clientWidth;
+            const height = starBox.clientHeight;
+            if (width > 0 && height > 0) {
+                starCamera.aspect = width / height;
+                starCamera.updateProjectionMatrix();
+                starRenderer.setSize(width, height);
+            }
+        }
+
+        function animateStarPreview() {
+            requestAnimationFrame(animateStarPreview);
+            subStarGroup.rotation.y += 0.01;
+            subCore.rotation.x += 0.005;
+            subParticles.rotation.y -= 0.004;
+            starRenderer.render(starScene, starCamera);
+        }
+        animateStarPreview();
+
+        // --- 6. EVENT LISTENER NÚT VIEW STAR & ĐÓNG VÙNG HIỂN THỊ ---
+        const btnViewStar = document.getElementById('btn-view-star');
+        const btnCloseStar = document.getElementById('btn-close-star');
+        const starDisplayRegion = document.getElementById('star-display-region');
+
+        btnViewStar.addEventListener('click', () => {
+            starDisplayRegion.style.display = 'block';
+            setTimeout(() => {
+                starDisplayRegion.style.opacity = '1';
+                resizeStarPreview();
+            }, 10);
+
+            starDisplayRegion.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        btnCloseStar.addEventListener('click', () => {
+            starDisplayRegion.style.opacity = '0';
+            setTimeout(() => {
+                starDisplayRegion.style.display = 'none';
+            }, 500);
+        });
+
+        window.addEventListener('resize', () => {
+            mainCamera.aspect = window.innerWidth / window.innerHeight;
+            mainCamera.updateProjectionMatrix();
+            mainRenderer.setSize(window.innerWidth, window.innerHeight);
+            adjustLayout();
+            resizeStarPreview();
         });
     </script>
 </body>
