@@ -211,12 +211,12 @@
             box-shadow: 0 0 25px rgba(0, 243, 255, 0.8);
         }
 
-        /* Content Sections - Trong suốt hoàn toàn để lộ quả cầu phía sau */
+        /* Content Sections */
         .specs-section {
             position: relative;
             z-index: 2;
             padding: 5rem 5%;
-            background: transparent !important; /* Đã bỏ màu nền phủ */
+            background: transparent !important;
         }
 
         .section-title {
@@ -230,9 +230,9 @@
 
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 1.5rem;
-            max-width: 1200px;
+            max-width: 1300px;
             margin: 0 auto;
         }
 
@@ -245,6 +245,9 @@
             position: relative;
             overflow: hidden;
             backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .card::before {
@@ -280,6 +283,112 @@
             color: #94a3b8;
             line-height: 1.5;
             font-size: 0.95rem;
+        }
+
+        /* Card Đặc Biệt: View Star */
+        .card-view-star {
+            background: rgba(112, 0, 255, 0.25);
+            border: 1px solid var(--primary);
+            align-items: center;
+            text-align: center;
+        }
+
+        .card-view-star::before {
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+        }
+
+        .view-star-btn {
+            margin-top: 1rem;
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border: none;
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .view-star-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.8);
+        }
+
+        /* Vùng Hiển Thị Star Chi Tiết (Star Display Region) */
+        .star-display-region {
+            position: relative;
+            z-index: 2;
+            max-width: 1100px;
+            margin: 3rem auto 0 auto;
+            padding: 2rem;
+            background: rgba(3, 7, 18, 0.85);
+            border: 1px solid var(--primary);
+            border-radius: 16px;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 0 40px rgba(0, 243, 255, 0.2);
+            display: none; /* Xuất hiện khi nhấn VIEW STAR */
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .star-display-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0, 243, 255, 0.3);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .star-display-header h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--primary);
+            text-shadow: 0 0 10px var(--primary);
+        }
+
+        .close-display-btn {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-display-btn:hover {
+            color: #ff0055;
+        }
+
+        .star-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+            text-align: left;
+        }
+
+        .info-box {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--secondary);
+        }
+
+        .info-box span {
+            display: block;
+            font-size: 0.8rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+        }
+
+        .info-box strong {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            color: #fff;
         }
 
         /* Responsive Layout Desktop */
@@ -324,7 +433,7 @@
         </ul>
     </nav>
 
-    <!-- 3D Canvas Container (Nằm ở background cố định) -->
+    <!-- 3D Canvas Container -->
     <div id="webgl-container"></div>
 
     <!-- Hero Section -->
@@ -354,24 +463,70 @@
         <h2 class="section-title">THÔNG SỐ KỸ THUẬT VẬT LÝ</h2>
         <div class="grid-container">
             <div class="card">
-                <i class="fa-solid fa-atom"></i>
-                <h3>Kích Thước & Mật Độ</h3>
-                <p>Bán kính vỏ ngoài cố định 15m. Khối lượng tập trung cực hạn tạo độ dốc trọng lực cao và lực đệm Meissner.</p>
+                <div>
+                    <i class="fa-solid fa-atom"></i>
+                    <h3>Kích Thước & Mật Độ</h3>
+                    <p>Bán kính vỏ ngoài cố định 15m. Khối lượng tập trung cực hạn tạo độ dốc trọng lực cao và lực đệm Meissner.</p>
+                </div>
             </div>
             <div class="card">
-                <i class="fa-solid fa-rotate-right"></i>
-                <h3>Lõi Quay Tốc Độ Cao</h3>
-                <p>Tốc độ quay 16,8 triệu vòng/giây (16,8 MHz) phát ra sóng điện từ cao tần và dải từ trường biến thiên cực đại.</p>
+                <div>
+                    <i class="fa-solid fa-rotate-right"></i>
+                    <h3>Lõi Quay Tốc Độ Cao</h3>
+                    <p>Tốc độ quay 16,8 triệu vòng/giây (16,8 MHz) phát ra sóng điện từ cao tần và dải từ trường biến thiên cực đại.</p>
+                </div>
             </div>
             <div class="card">
-                <i class="fa-solid fa-temperature-arrow-down"></i>
-                <h3>Nhiệt Độ Âm Lượng Tử</h3>
-                <p>Duy trì môi trường siêu dẫn tại -500.000°C, triệt tiêu sự tỏa nhiệt thông thường và giữ ổn định liên kết hạt.</p>
+                <div>
+                    <i class="fa-solid fa-temperature-arrow-down"></i>
+                    <h3>Nhiệt Độ Âm LƯỢNG TỬ</h3>
+                    <p>Duy trì môi trường siêu dẫn tại -500.000°C, triệt tiêu sự tỏa nhiệt thông thường và giữ ổn định liên kết hạt.</p>
+                </div>
             </div>
             <div class="card">
-                <i class="fa-solid fa-magnet"></i>
-                <h3>Từ Trường Bẫy >200B</h3>
-                <p>Khung từ trường khổng lồ giữ dải proton (p+) và electron (e-) tạo quầng sáng huỳnh quang xanh lam đặc trưng.</p>
+                <div>
+                    <i class="fa-solid fa-magnet"></i>
+                    <h3>Từ Trường Bẫy >200B</h3>
+                    <p>Khung từ trường khổng lồ giữ dải proton (p+) và electron (e-) tạo quầng sáng huỳnh quang xanh lam đặc trưng.</p>
+                </div>
+            </div>
+
+            <!-- Nút Mới Ngoài Cùng: VIEW STAR -->
+            <div class="card card-view-star">
+                <div>
+                    <i class="fa-solid fa-star" style="font-size: 2.2rem; color: #fff;"></i>
+                    <h3>CHẾ ĐỘ XEM STAR</h3>
+                    <p>Kích hoạt góc nhìn chuyên sâu và bảng phân tích dữ liệu trực tiếp từ lõi E-Star.</p>
+                </div>
+                <button class="view-star-btn" id="btn-view-star">
+                    <i class="fa-solid fa-eye"></i> VIEW STAR
+                </button>
+            </div>
+        </div>
+
+        <!-- Vùng Hiển Thị Trạng Thái Star (Star Display Region) -->
+        <div class="star-display-region" id="star-display-region">
+            <div class="star-display-header">
+                <h3><i class="fa-solid fa-chart-line"></i> DỮ LIỆU LÕI E-STAR CORE</h3>
+                <button class="close-display-btn" id="btn-close-star"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="star-info-grid">
+                <div class="info-box">
+                    <span>Trạng thái hoạt động</span>
+                    <strong>100% STABLE</strong>
+                </div>
+                <div class="info-box">
+                    <span>Năng lượng phát ra</span>
+                    <strong>4.8 x 10²⁶ W</strong>
+                </div>
+                <div class="info-box">
+                    <span>Tốc độ lõi quay</span>
+                    <strong>16,800,000 RPM</strong>
+                </div>
+                <div class="info-box">
+                    <span>Mật độ trường hấp dẫn</span>
+                    <strong>9.81 x 10⁵ m/s²</strong>
+                </div>
             </div>
         </div>
     </section>
@@ -406,7 +561,6 @@
 
         const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
         
-        // Group chứa toàn bộ ngôi sao 3D
         const starGroup = new THREE.Group();
         scene.add(starGroup);
 
@@ -487,7 +641,6 @@
         starGroup.add(ring1);
         starGroup.add(ring2);
 
-        // Khởi tạo vị trí ban đầu
         adjustLayout();
 
         // Animation Loop
@@ -505,7 +658,6 @@
         }
         animate();
 
-        // Window Resize Handler
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
@@ -513,38 +665,59 @@
             adjustLayout();
         });
 
-        // --- 3. HIỆU ỨNG PHÓNG TO QUẢ CẦU KHI CHUYỂN MENU ---
+        // --- 3. MENU NAVIGATION ---
         document.getElementById('nav-overview').addEventListener('click', () => {
-            gsap.to(camera.position, {
-                z: baseZPos - 18,
-                duration: 2,
-                ease: "power2.inOut"
-            });
-            gsap.to(starGroup.scale, {
-                x: baseScale * 1.8,
-                y: baseScale * 1.8,
-                z: baseScale * 1.8,
-                duration: 2,
-                ease: "power2.inOut"
-            });
+            gsap.to(camera.position, { z: baseZPos - 18, duration: 2, ease: "power2.inOut" });
+            gsap.to(starGroup.scale, { x: baseScale * 1.8, y: baseScale * 1.8, z: baseScale * 1.8, duration: 2, ease: "power2.inOut" });
         });
 
         document.getElementById('nav-home').addEventListener('click', () => {
-            gsap.to(camera.position, {
-                z: baseZPos,
-                duration: 2,
-                ease: "power2.inOut"
-            });
-            gsap.to(starGroup.scale, {
-                x: baseScale,
-                y: baseScale,
-                z: baseScale,
-                duration: 2,
-                ease: "power2.inOut"
-            });
+            gsap.to(camera.position, { z: baseZPos, duration: 2, ease: "power2.inOut" });
+            gsap.to(starGroup.scale, { x: baseScale, y: baseScale, z: baseScale, duration: 2, ease: "power2.inOut" });
         });
 
-        // --- 4. GSAP SCROLLTRIGGER: PHÓNG TO + ĐỔI MÀU KHI CUỘN TRANG ---
+        // --- 4. VIEW STAR BUTTON LOGIC & STAR DISPLAY REGION ---
+        const btnViewStar = document.getElementById('btn-view-star');
+        const btnCloseStar = document.getElementById('btn-close-star');
+        const starDisplayRegion = document.getElementById('star-display-region');
+
+        btnViewStar.addEventListener('click', () => {
+            // Mở vùng hiển thị thông tin Star
+            starDisplayRegion.style.display = 'block';
+            setTimeout(() => {
+                starDisplayRegion.style.opacity = '1';
+            }, 10);
+
+            // Phóng to quả cầu 3D để tập trung quan sát
+            gsap.to(starGroup.scale, {
+                x: baseScale * 2.2,
+                y: baseScale * 2.2,
+                z: baseScale * 2.2,
+                duration: 1.5,
+                ease: "power2.out"
+            });
+
+            // Đổi màu rực rỡ
+            gsap.to(coreMaterial.color, { r: 1.0, g: 0.8, b: 0.0, duration: 1 });
+            gsap.to(particleMaterial.color, { r: 1.0, g: 0.5, b: 0.0, duration: 1 });
+
+            // Cuộn xuống vùng hiển thị Star
+            starDisplayRegion.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        btnCloseStar.addEventListener('click', () => {
+            starDisplayRegion.style.opacity = '0';
+            setTimeout(() => {
+                starDisplayRegion.style.display = 'none';
+            }, 500);
+
+            // Phục hồi kích thước và màu sắc ban đầu
+            gsap.to(starGroup.scale, { x: baseScale * 1.7, y: baseScale * 1.7, z: baseScale * 1.7, duration: 1.2 });
+            gsap.to(coreMaterial.color, { r: 1.0, g: 0.0, b: 0.33, duration: 1 });
+            gsap.to(particleMaterial.color, { r: 1.0, g: 0.2, b: 0.5, duration: 1 });
+        });
+
+        // --- 5. GSAP SCROLLTRIGGER ---
         gsap.registerPlugin(ScrollTrigger);
 
         ScrollTrigger.create({
@@ -552,12 +725,10 @@
             start: "top 70%",
             end: "bottom 20%",
             onEnter: () => {
-                // Đổi màu Đỏ Tía
                 gsap.to(coreMaterial.color, { r: 1.0, g: 0.0, b: 0.33, duration: 1.5 });
                 gsap.to(ringMat.color, { r: 1.0, g: 0.0, b: 0.33, duration: 1.5 });
                 gsap.to(particleMaterial.color, { r: 1.0, g: 0.2, b: 0.5, duration: 1.5 });
                 
-                // Phóng to khi cuộn xuống
                 gsap.to(starGroup.scale, {
                     x: baseScale * 1.7,
                     y: baseScale * 1.7,
@@ -567,12 +738,10 @@
                 });
             },
             onLeaveBack: () => {
-                // Trở lại màu Xanh Neon
                 gsap.to(coreMaterial.color, { r: 0.0, g: 0.95, b: 1.0, duration: 1.5 });
                 gsap.to(ringMat.color, { r: 0.0, g: 0.95, b: 1.0, duration: 1.5 });
                 gsap.to(particleMaterial.color, { r: 0.0, g: 0.95, b: 1.0, duration: 1.5 });
 
-                // Thu nhỏ lại
                 gsap.to(starGroup.scale, {
                     x: baseScale,
                     y: baseScale,
