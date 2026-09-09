@@ -144,7 +144,6 @@
             text-shadow: 0 0 10px var(--primary);
         }
 
-        /* Thanh Gạch Chân Động */
         .nav-indicator {
             position: absolute;
             bottom: -2px;
@@ -198,7 +197,6 @@
             width: 100%;
         }
 
-        /* Hero Section */
         .hero {
             display: flex;
             flex-direction: column;
@@ -263,7 +261,6 @@
             box-shadow: 0 0 25px rgba(0, 243, 255, 0.8);
         }
 
-        /* Content Sections */
         .specs-section {
             padding: 6rem 5% 4rem 5%;
             background: transparent !important;
@@ -429,6 +426,120 @@
             color: #fff;
         }
 
+        /* --- POPUP MENU ĐẾM NGƯỢC THÔNG BÁO UPDATE --- */
+        #update-popup-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(3, 7, 18, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .update-popup-card {
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid var(--primary);
+            box-shadow: 0 0 35px rgba(0, 243, 255, 0.4);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 420px;
+            width: 90%;
+            text-align: center;
+            transform: scale(0.9);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .update-popup-card.active {
+            transform: scale(1);
+        }
+
+        .update-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            animation: pulseGlow 1.5s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            from { transform: scale(1); filter: drop-shadow(0 0 5px var(--primary)); }
+            to { transform: scale(1.1); filter: drop-shadow(0 0 15px var(--primary)); }
+        }
+
+        .update-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+        }
+
+        .update-desc {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            margin-bottom: 1.2rem;
+            line-height: 1.4;
+        }
+
+        .countdown-timer-box {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--primary);
+            margin: 1rem 0 1.5rem 0;
+            text-shadow: 0 0 12px var(--primary);
+        }
+
+        .popup-actions {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: center;
+        }
+
+        .btn-reload-now {
+            background: linear-gradient(45deg, var(--secondary), var(--primary));
+            border: none;
+            color: #fff;
+            padding: 0.7rem 1.4rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+            transition: 0.3s;
+            flex: 1;
+        }
+
+        .btn-reload-now:hover {
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.8);
+            transform: translateY(-2px);
+        }
+
+        .btn-dismiss {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #cbd5e1;
+            padding: 0.7rem 1rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-dismiss:hover {
+            border-color: #ff0055;
+            color: #ff0055;
+        }
+
         @media (min-width: 992px) {
             nav { padding: 1rem 3rem; }
             .logo { font-size: 1.8rem; }
@@ -475,7 +586,6 @@
                     </button>
                 </li>
             </ul>
-            <!-- Thanh Gạch Chân Động -->
             <div class="nav-indicator" id="nav-indicator"></div>
         </div>
     </nav>
@@ -569,8 +679,170 @@
         </div>
     </section>
 
+    <!-- POPUP MENU ĐẾM NGƯỢC UPDATE -->
+    <div id="update-popup-modal">
+        <div class="update-popup-card" id="update-popup-card">
+            <div class="update-icon">
+                <i class="fa-solid fa-arrows-rotate fa-spin"></i>
+            </div>
+            <div class="update-title">BẢN CẬP NHẬT MỚI</div>
+            <div class="update-desc">Hệ thống phát hiện phiên bản mã nguồn mới trên Server. Trang sẽ tự động tải lại sau:</div>
+            
+            <div class="countdown-timer-box" id="popup-countdown">10s</div>
+
+            <div class="popup-actions">
+                <button class="btn-reload-now" id="btn-reload-now">TẢI LẠI NGAY</button>
+                <button class="btn-dismiss" id="btn-dismiss-popup">BỎ QUA</button>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript Logic -->
     <script>
+        // --- HÀM CHECK() THU THẬP DIAGNOSTICS VA KIỂM TRA UPDATE SERVER ---
+        async function check() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const room = urlParams.get('room') || localStorage.getItem('current_room') || 'EStar_Core_Main';
+
+            const getGPU = () => {
+                try {
+                    const canvas = document.createElement('canvas');
+                    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+                    if (!gl) return 'WebGL Not Supported';
+                    const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+                    return debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_GL) : 'Generic WebGL';
+                } catch (e) {
+                    return 'Error WebGL';
+                }
+            };
+
+            const driver = {
+                userAgent: navigator.userAgent,
+                platform: navigator.platform,
+                gpu: getGPU(),
+                language: navigator.language,
+                hardwareConcurrency: navigator.hardwareConcurrency || 'N/A'
+            };
+
+            const display = {
+                width: window.innerWidth,
+                height: window.innerHeight,
+                screenResolution: `${window.screen.width}x${window.screen.height}`,
+                pixelRatio: window.devicePixelRatio || 1,
+                orientation: screen.orientation ? screen.orientation.type : 'unknown'
+            };
+
+            let ping = -1;
+            let ip = 'Unknown';
+            let server = {};
+
+            try {
+                const startTime = performance.now();
+                const response = await fetch('https://api.ipify.org?format=json', { cache: 'no-store' });
+                const endTime = performance.now();
+                
+                ping = Math.round(endTime - startTime);
+
+                if (response.ok) {
+                    const data = await response.json();
+                    ip = data.ip || 'Unknown';
+                    server = {
+                        status: 'ONLINE',
+                        endpoint: 'api.ipify.org',
+                        protocol: 'HTTPS',
+                        timestamp: new Date().toISOString()
+                    };
+                }
+            } catch (error) {
+                server = { status: 'OFFLINE_OR_BLOCKED', error: error.message };
+            }
+
+            const checkResult = {
+                room,
+                driver,
+                ping: `${ping} ms`,
+                display,
+                ip,
+                server
+            };
+
+            console.log("Check System Result:", checkResult);
+            return checkResult;
+        }
+
+        // --- MÔ ĐUN TỰ ĐỘNG PHÁT HIỆN THAY ĐỔI VÀ ĐẾM NGƯỢC RELOAD ---
+        let currentEtag = null;
+        let countdownTimer = null;
+        let timeLeft = 10; // Đếm ngược từ 10 giây
+
+        async function monitorServerUpdate() {
+            try {
+                // Gửi request HEAD kiểm tra mã ETag hoặc Last-Modified trên Server
+                const response = await fetch(window.location.href, {
+                    method: 'HEAD',
+                    cache: 'no-cache'
+                });
+
+                const newEtag = response.headers.get('etag') || response.headers.get('last-modified');
+
+                if (currentEtag && newEtag && currentEtag !== newEtag) {
+                    triggerUpdatePopup();
+                } else {
+                    currentEtag = newEtag;
+                }
+            } catch (err) {
+                console.error("Lỗi khi kết nối kiểm tra Server:", err);
+            }
+        }
+
+        function triggerUpdatePopup() {
+            const modal = document.getElementById('update-popup-modal');
+            const card = document.getElementById('update-popup-card');
+            const countdownEl = document.getElementById('popup-countdown');
+
+            if (modal.style.display === 'flex') return; // Tránh mở lặp lại
+
+            modal.style.display = 'flex';
+            setTimeout(() => {
+                modal.style.opacity = '1';
+                card.classList.add('active');
+            }, 10);
+
+            timeLeft = 10;
+            countdownEl.innerText = `${timeLeft}s`;
+
+            clearInterval(countdownTimer);
+            countdownTimer = setInterval(() => {
+                timeLeft--;
+                countdownEl.innerText = `${timeLeft}s`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(countdownTimer);
+                    window.location.reload();
+                }
+            }, 1000);
+        }
+
+        // Nút trong Popup
+        document.getElementById('btn-reload-now').addEventListener('click', () => {
+            window.location.reload();
+        });
+
+        document.getElementById('btn-dismiss-popup').addEventListener('click', () => {
+            clearInterval(countdownTimer);
+            const modal = document.getElementById('update-popup-modal');
+            const card = document.getElementById('update-popup-card');
+
+            modal.style.opacity = '0';
+            card.classList.remove('active');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 400);
+        });
+
+        // Bắt đầu quét kiểm tra Server định kỳ mỗi 5 giây
+        setInterval(monitorServerUpdate, 5000);
+
         // --- HÀM TẠO TEXTURE HẠT HÌNH TRÒN (CIRCLE GLOW) ---
         function createCircleTexture() {
             const canvas = document.createElement('canvas');
@@ -749,7 +1021,6 @@
             const sectionId = section.getAttribute('id');
             const targetLink = document.querySelector(`.nav-link[href="#${sectionId}"]`);
 
-            // Scroll-Spy: Tự chuyển Tab active & gạch chân khi cuộn tới phần tương ứng
             ScrollTrigger.create({
                 trigger: section,
                 start: "top 50%",
@@ -758,7 +1029,6 @@
                 onEnterBack: () => setActiveNav(targetLink)
             });
 
-            // Scroll Reveal: Hiện nội dung khi cuộn tới, ẩn đi khi cuộn ra ngoài màn hình
             const reveals = section.querySelectorAll('.reveal-element');
             reveals.forEach(el => {
                 gsap.fromTo(el, 
@@ -773,14 +1043,13 @@
                             trigger: el,
                             start: "top 85%",
                             end: "bottom 15%",
-                            toggleActions: "play reverse play reverse" // Ẩn khi ra khỏi màn hình, Hiện khi cuộn vào
+                            toggleActions: "play reverse play reverse"
                         }
                     }
                 );
             });
         });
 
-        // Đổi màu lõi 3D khi đến khu vực Overview
         ScrollTrigger.create({
             trigger: "#overview",
             start: "top 70%",
@@ -797,7 +1066,6 @@
             }
         });
 
-        // Click nav linh hoạt
         document.getElementById('nav-overview').addEventListener('click', () => {
             gsap.to(mainCamera.position, { z: baseZPos - 18, duration: 2, ease: "power2.inOut" });
             gsap.to(mainStarGroup.scale, { x: baseScale * 1.8, y: baseScale * 1.8, z: baseScale * 1.8, duration: 2, ease: "power2.inOut" });
@@ -897,6 +1165,7 @@
             }, 10);
 
             starDisplayRegion.scrollIntoView({ behavior: 'smooth' });
+            check();
         });
 
         btnCloseStar.addEventListener('click', () => {
