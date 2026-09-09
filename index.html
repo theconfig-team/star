@@ -20,7 +20,7 @@
             --primary: #00f3ff;
             --secondary: #7000ff;
             --bg: #030712;
-            --panel-bg: rgba(15, 23, 42, 0.85);
+            --panel-bg: rgba(15, 23, 42, 0.75);
             --text: #e2e8f0;
         }
 
@@ -97,7 +97,7 @@
             justify-content: space-between;
             align-items: center;
             z-index: 100;
-            background: rgba(3, 7, 18, 0.85);
+            background: rgba(3, 7, 18, 0.7);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(0, 243, 255, 0.2);
         }
@@ -164,7 +164,7 @@
             padding: 1.2rem 1.5rem;
             border-radius: 16px;
             border: 1px solid rgba(0, 243, 255, 0.3);
-            backdrop-filter: blur(16px);
+            backdrop-filter: blur(12px);
             box-shadow: 0 0 30px rgba(0, 243, 255, 0.15);
             text-align: center;
         }
@@ -211,12 +211,12 @@
             box-shadow: 0 0 25px rgba(0, 243, 255, 0.8);
         }
 
-        /* Content Sections */
+        /* Content Sections - Trong suốt hoàn toàn để lộ quả cầu phía sau */
         .specs-section {
             position: relative;
             z-index: 2;
             padding: 5rem 5%;
-            background: linear-gradient(to bottom, transparent, var(--bg) 20%);
+            background: transparent !important; /* Đã bỏ màu nền phủ */
         }
 
         .section-title {
@@ -238,7 +238,7 @@
 
         .card {
             background: var(--panel-bg);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(0, 243, 255, 0.25);
             border-radius: 12px;
             padding: 1.8rem;
             transition: 0.3s;
@@ -260,7 +260,7 @@
         .card:hover {
             transform: translateY(-5px);
             border-color: var(--primary);
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
         }
 
         .card i {
@@ -324,7 +324,7 @@
         </ul>
     </nav>
 
-    <!-- 3D Canvas Container -->
+    <!-- 3D Canvas Container (Nằm ở background cố định) -->
     <div id="webgl-container"></div>
 
     <!-- Hero Section -->
@@ -410,7 +410,6 @@
         const starGroup = new THREE.Group();
         scene.add(starGroup);
 
-        // Tốc độ và kích thước cơ bản dựa theo thiết bị
         let baseScale = 0.6;
         let baseZPos = 40;
 
@@ -515,16 +514,14 @@
         });
 
         // --- 3. HIỆU ỨNG PHÓNG TO QUẢ CẦU KHI CHUYỂN MENU ---
-        
-        // Khi bấm 'Tổng Quan': Camera tiến lại gần làm quả cầu PHÓNG TO NỔI BẬT
         document.getElementById('nav-overview').addEventListener('click', () => {
             gsap.to(camera.position, {
-                z: baseZPos - 18, // Đưa camera tiến sát lại gần quả cầu
+                z: baseZPos - 18,
                 duration: 2,
                 ease: "power2.inOut"
             });
             gsap.to(starGroup.scale, {
-                x: baseScale * 1.8, // Phóng to kích thước quả cầu lên 1.8 lần
+                x: baseScale * 1.8,
                 y: baseScale * 1.8,
                 z: baseScale * 1.8,
                 duration: 2,
@@ -532,7 +529,6 @@
             });
         });
 
-        // Khi quay lại 'Trang Chủ': Thu nhỏ quả cầu về lại kích thước chuẩn
         document.getElementById('nav-home').addEventListener('click', () => {
             gsap.to(camera.position, {
                 z: baseZPos,
@@ -561,7 +557,7 @@
                 gsap.to(ringMat.color, { r: 1.0, g: 0.0, b: 0.33, duration: 1.5 });
                 gsap.to(particleMaterial.color, { r: 1.0, g: 0.2, b: 0.5, duration: 1.5 });
                 
-                // Phóng to khi cuộn xuống mục Overview
+                // Phóng to khi cuộn xuống
                 gsap.to(starGroup.scale, {
                     x: baseScale * 1.7,
                     y: baseScale * 1.7,
@@ -576,7 +572,7 @@
                 gsap.to(ringMat.color, { r: 0.0, g: 0.95, b: 1.0, duration: 1.5 });
                 gsap.to(particleMaterial.color, { r: 0.0, g: 0.95, b: 1.0, duration: 1.5 });
 
-                // Thu nhỏ lại khi cuộn lên đầu trang
+                // Thu nhỏ lại
                 gsap.to(starGroup.scale, {
                     x: baseScale,
                     y: baseScale,
