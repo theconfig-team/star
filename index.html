@@ -10,17 +10,13 @@
     
     <!-- Three.js Engine -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    
-    <!-- GSAP for Smooth Transitions & Zoom Effects -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
     <style>
         :root {
             --primary: #00f3ff;
             --secondary: #7000ff;
             --bg: #030712;
-            --panel-bg: rgba(15, 23, 42, 0.75);
+            --panel-bg: rgba(15, 23, 42, 0.85);
             --text: #e2e8f0;
         }
 
@@ -97,7 +93,7 @@
             justify-content: space-between;
             align-items: center;
             z-index: 100;
-            background: rgba(3, 7, 18, 0.7);
+            background: rgba(3, 7, 18, 0.85);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(0, 243, 255, 0.2);
         }
@@ -132,74 +128,60 @@
             text-shadow: 0 0 8px var(--primary);
         }
 
-        /* Canvas 3D Cố định toàn màn hình */
-        #webgl-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 1;
-            pointer-events: none;
-        }
-
         /* Hero Section */
         .hero {
             position: relative;
-            height: 100vh;
+            min-height: 80vh;
             width: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: flex-end;
+            justify-content: center;
             align-items: center;
-            padding: 1.5rem 1rem 2rem 1rem;
+            padding: 6rem 1rem 2rem 1rem;
+            text-align: center;
         }
 
         .hero-content {
-            position: relative;
-            z-index: 2;
-            width: 100%;
-            max-width: 400px;
+            max-width: 600px;
             background: var(--panel-bg);
-            padding: 1.2rem 1.5rem;
+            padding: 2rem;
             border-radius: 16px;
             border: 1px solid rgba(0, 243, 255, 0.3);
             backdrop-filter: blur(12px);
             box-shadow: 0 0 30px rgba(0, 243, 255, 0.15);
-            text-align: center;
         }
 
         .hero-content h1 {
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.8rem;
+            font-size: 2.2rem;
             color: #fff;
-            margin-bottom: 0.2rem;
+            margin-bottom: 0.5rem;
             letter-spacing: 2px;
         }
 
         .hero-content .subtitle {
             color: var(--primary);
-            font-size: 0.85rem;
+            font-size: 0.95rem;
             font-weight: 700;
-            margin-bottom: 0.8rem;
+            margin-bottom: 1rem;
             letter-spacing: 1px;
         }
 
         .hero-content p {
-            font-size: 0.85rem;
-            line-height: 1.4;
+            font-size: 0.95rem;
+            line-height: 1.5;
             color: #cbd5e1;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
 
         .cta-btn {
             display: inline-block;
-            padding: 0.6rem 1.4rem;
+            padding: 0.7rem 1.6rem;
             background: linear-gradient(45deg, var(--secondary), var(--primary));
             color: #fff;
             text-decoration: none;
             font-family: 'Orbitron', sans-serif;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 700;
             border-radius: 8px;
             box-shadow: 0 0 15px rgba(112, 0, 255, 0.5);
@@ -213,10 +195,7 @@
 
         /* Content Sections */
         .specs-section {
-            position: relative;
-            z-index: 2;
-            padding: 5rem 5%;
-            background: transparent !important;
+            padding: 3rem 5%;
         }
 
         .section-title {
@@ -232,7 +211,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 1.5rem;
-            max-width: 1300px;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
@@ -243,7 +222,6 @@
             padding: 1.8rem;
             transition: 0.3s;
             position: relative;
-            overflow: hidden;
             backdrop-filter: blur(12px);
             display: flex;
             flex-direction: column;
@@ -285,20 +263,16 @@
             font-size: 0.95rem;
         }
 
-        /* Card Đặc Biệt: View Star */
+        /* Card VIEW STAR ngoài cùng */
         .card-view-star {
-            background: rgba(112, 0, 255, 0.25);
+            background: rgba(112, 0, 255, 0.2);
             border: 1px solid var(--primary);
-            align-items: center;
             text-align: center;
-        }
-
-        .card-view-star::before {
-            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+            align-items: center;
         }
 
         .view-star-btn {
-            margin-top: 1rem;
+            margin-top: 1.2rem;
             width: 100%;
             padding: 0.8rem 1rem;
             background: linear-gradient(45deg, var(--primary), var(--secondary));
@@ -318,19 +292,16 @@
             box-shadow: 0 0 25px rgba(0, 243, 255, 0.8);
         }
 
-        /* Vùng Hiển Thị Star Chi Tiết (Star Display Region) */
+        /* VÙNG HIỂN THỊ NGÔI SAO (STAR DISPLAY REGION) */
         .star-display-region {
-            position: relative;
-            z-index: 2;
-            max-width: 1100px;
+            max-width: 1000px;
             margin: 3rem auto 0 auto;
-            padding: 2rem;
-            background: rgba(3, 7, 18, 0.85);
+            padding: 1.5rem;
+            background: rgba(3, 7, 18, 0.95);
             border: 1px solid var(--primary);
             border-radius: 16px;
-            backdrop-filter: blur(16px);
-            box-shadow: 0 0 40px rgba(0, 243, 255, 0.2);
-            display: none; /* Xuất hiện khi nhấn VIEW STAR */
+            box-shadow: 0 0 40px rgba(0, 243, 255, 0.25);
+            display: none; /* Mặc định ẩn, bật khi click VIEW STAR */
             opacity: 0;
             transition: opacity 0.5s ease;
         }
@@ -340,13 +311,13 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid rgba(0, 243, 255, 0.3);
-            padding-bottom: 1rem;
+            padding-bottom: 0.8rem;
             margin-bottom: 1.5rem;
         }
 
         .star-display-header h3 {
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             color: var(--primary);
             text-shadow: 0 0 10px var(--primary);
         }
@@ -364,15 +335,33 @@
             color: #ff0055;
         }
 
+        /* Container chứa riêng Canvas 3D Ngôi Sao */
+        .star-canvas-box {
+            width: 100%;
+            height: 380px;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            margin-bottom: 1.5rem;
+        }
+
+        .star-canvas-box canvas {
+            width: 100% !important;
+            height: 100% !important;
+            display: block;
+        }
+
         .star-info-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.2rem;
+            gap: 1rem;
             text-align: left;
         }
 
         .info-box {
-            background: rgba(15, 23, 42, 0.6);
+            background: rgba(15, 23, 42, 0.8);
             padding: 1rem;
             border-radius: 8px;
             border-left: 3px solid var(--secondary);
@@ -387,28 +376,8 @@
 
         .info-box strong {
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: #fff;
-        }
-
-        /* Responsive Layout Desktop */
-        @media (min-width: 992px) {
-            nav { padding: 1.2rem 3rem; }
-            .logo { font-size: 1.8rem; }
-            .nav-links a { font-size: 1.1rem; }
-            .hero {
-                justify-content: center;
-                align-items: flex-end;
-                padding-right: 10%;
-            }
-            .hero-content {
-                text-align: left;
-                max-width: 450px;
-                padding: 2.2rem;
-            }
-            .hero-content h1 { font-size: 2.8rem; }
-            .hero-content .subtitle { font-size: 1.1rem; }
-            .hero-content p { font-size: 0.95rem; }
         }
     </style>
 </head>
@@ -427,14 +396,11 @@
     <nav>
         <div class="logo">E-STAR</div>
         <ul class="nav-links">
-            <li><a href="#home" id="nav-home">Trang Chủ</a></li>
-            <li><a href="#overview" id="nav-overview">Tổng Quan</a></li>
+            <li><a href="#home">Trang Chủ</a></li>
+            <li><a href="#overview">Tổng Quan</a></li>
             <li><a href="#specs">Thông Số</a></li>
         </ul>
     </nav>
-
-    <!-- 3D Canvas Container -->
-    <div id="webgl-container"></div>
 
     <!-- Hero Section -->
     <section class="hero" id="home">
@@ -442,7 +408,7 @@
             <h1>E-STAR</h1>
             <div class="subtitle">THIÊN THỂ SIÊU NÉN LƯỢNG TỬ</div>
             <p>Mô hình cỗ máy năng lượng vũ trụ bán kính 15m. Hoạt động dựa trên lõi quay 16.8 triệu vòng/giây cùng vùng nhiệt độ âm lượng tử, giải phóng dòng hạt sơ cấp vô hạn.</p>
-            <a href="#overview" class="cta-btn"><i class="fa-solid fa-compass"></i> KHÁM PHÁ NGAY</a>
+            <a href="#specs" class="cta-btn"><i class="fa-solid fa-compass"></i> KHÁM PHÁ THÔNG SỐ</a>
         </div>
     </section>
 
@@ -452,8 +418,8 @@
         <div class="card" style="max-width: 900px; margin: 0 auto; text-align: center;">
             <i class="fa-solid fa-globe" style="font-size: 2.5rem; margin-bottom: 1rem;"></i>
             <h3>Mô Hình Vũ Trụ Thu Nhỏ</h3>
-            <p style="font-size: 1.05rem; line-height: 1.8;">
-                E-Star là sự kết hợp giữa kỹ thuật vật lý lượng tử cực hạn và cơ học không-thời gian. Với khả năng tự duy trì cấu trúc ở nhiệt độ âm và điều khiển dòng hạt sơ cấp, E-Star sẵn sàng hoạt động như một cỗ máy cung cấp năng lượng toàn cầu hoặc trạm tổng hợp vật chất ngoài không gian.
+            <p style="font-size: 1rem; line-height: 1.8;">
+                E-Star là sự kết hợp giữa kỹ thuật vật lý lượng tử cực hạn và cơ học không-thời gian. Với khả năng tự duy trì cấu trúc ở nhiệt độ âm và điều khiển dòng hạt sơ cấp, E-Star sẵn sàng hoạt động như một cỗ máy cung cấp năng lượng toàn cầu.
             </p>
         </div>
     </section>
@@ -466,37 +432,37 @@
                 <div>
                     <i class="fa-solid fa-atom"></i>
                     <h3>Kích Thước & Mật Độ</h3>
-                    <p>Bán kính vỏ ngoài cố định 15m. Khối lượng tập trung cực hạn tạo độ dốc trọng lực cao và lực đệm Meissner.</p>
+                    <p>Bán kính vỏ ngoài cố định 15m. Khối lượng tập trung cực hạn tạo độ dốc trọng lực cao.</p>
                 </div>
             </div>
             <div class="card">
                 <div>
                     <i class="fa-solid fa-rotate-right"></i>
                     <h3>Lõi Quay Tốc Độ Cao</h3>
-                    <p>Tốc độ quay 16,8 triệu vòng/giây (16,8 MHz) phát ra sóng điện từ cao tần và dải từ trường biến thiên cực đại.</p>
+                    <p>Tốc độ quay 16,8 triệu vòng/giây (16,8 MHz) phát ra sóng điện từ cao tần cực đại.</p>
                 </div>
             </div>
             <div class="card">
                 <div>
                     <i class="fa-solid fa-temperature-arrow-down"></i>
                     <h3>Nhiệt Độ Âm LƯỢNG TỬ</h3>
-                    <p>Duy trì môi trường siêu dẫn tại -500.000°C, triệt tiêu sự tỏa nhiệt thông thường và giữ ổn định liên kết hạt.</p>
+                    <p>Duy trì môi trường siêu dẫn tại -500.000°C, triệt tiêu sự tỏa nhiệt thông thường.</p>
                 </div>
             </div>
             <div class="card">
                 <div>
                     <i class="fa-solid fa-magnet"></i>
                     <h3>Từ Trường Bẫy >200B</h3>
-                    <p>Khung từ trường khổng lồ giữ dải proton (p+) và electron (e-) tạo quầng sáng huỳnh quang xanh lam đặc trưng.</p>
+                    <p>Khung từ trường khổng lồ giữ dải proton (p+) và electron (e-) tạo quầng sáng huỳnh quang.</p>
                 </div>
             </div>
 
-            <!-- Nút Mới Ngoài Cùng: VIEW STAR -->
+            <!-- Nút Mới Ở Ngoài Cùng: VIEW STAR -->
             <div class="card card-view-star">
                 <div>
                     <i class="fa-solid fa-star" style="font-size: 2.2rem; color: #fff;"></i>
-                    <h3>CHẾ ĐỘ XEM STAR</h3>
-                    <p>Kích hoạt góc nhìn chuyên sâu và bảng phân tích dữ liệu trực tiếp từ lõi E-Star.</p>
+                    <h3>XEM NGÔI SAO 3D</h3>
+                    <p>Mở không gian hiển thị độc lập chỉ dành riêng cho Ngôi sao E-Star.</p>
                 </div>
                 <button class="view-star-btn" id="btn-view-star">
                     <i class="fa-solid fa-eye"></i> VIEW STAR
@@ -504,27 +470,31 @@
             </div>
         </div>
 
-        <!-- Vùng Hiển Thị Trạng Thái Star (Star Display Region) -->
+        <!-- VÙNG CHIẾN DỊCH HIỂN THỊ MỖI NGÔI SAO -->
         <div class="star-display-region" id="star-display-region">
             <div class="star-display-header">
-                <h3><i class="fa-solid fa-chart-line"></i> DỮ LIỆU LÕI E-STAR CORE</h3>
+                <h3><i class="fa-solid fa-star"></i> MÔ PHỎNG LÕI NGÔI SAO 3D (E-STAR)</h3>
                 <button class="close-display-btn" id="btn-close-star"><i class="fa-solid fa-xmark"></i></button>
             </div>
+
+            <!-- Nơi vẽ duy nhất Ngôi Sao 3D -->
+            <div class="star-canvas-box" id="star-canvas-container"></div>
+
             <div class="star-info-grid">
                 <div class="info-box">
-                    <span>Trạng thái hoạt động</span>
-                    <strong>100% STABLE</strong>
+                    <span>Trạng thái Lõi</span>
+                    <strong>STABLE (ỔN ĐỊNH)</strong>
                 </div>
                 <div class="info-box">
-                    <span>Năng lượng phát ra</span>
+                    <span>Bức Xạ Phát Ra</span>
                     <strong>4.8 x 10²⁶ W</strong>
                 </div>
                 <div class="info-box">
-                    <span>Tốc độ lõi quay</span>
-                    <strong>16,800,000 RPM</strong>
+                    <span>Tần Số Dao Động</span>
+                    <strong>16,800,000 Hz</strong>
                 </div>
                 <div class="info-box">
-                    <span>Mật độ trường hấp dẫn</span>
+                    <span>Trường Hấp Dẫn</span>
                     <strong>9.81 x 10⁵ m/s²</strong>
                 </div>
             </div>
@@ -533,7 +503,7 @@
 
     <!-- JavaScript Logic -->
     <script>
-        // --- 1. LOADING SCREEN LOGIC ---
+        // --- 1. LOADING SCREEN ---
         let progress = 0;
         const progressBar = document.getElementById('progress-bar');
         const loadingText = document.getElementById('loading-text');
@@ -555,85 +525,56 @@
             }
         }, 100);
 
-        // --- 2. THREE.JS 3D SCENE SETUP ---
-        const container = document.getElementById('webgl-container');
-        const scene = new THREE.Scene();
-
-        const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+        // --- 2. KỞI TẠO THREE.JS CHO KHUNG HIỂN THỊ NGÔI SAO (STAR CANVAS ONLY) ---
+        const starCanvasContainer = document.getElementById('star-canvas-container');
         
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
+        camera.position.z = 25;
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        starCanvasContainer.appendChild(renderer.domElement);
+
+        // Tạo nhóm Ngôi Sao
         const starGroup = new THREE.Group();
         scene.add(starGroup);
 
-        let baseScale = 0.6;
-        let baseZPos = 40;
+        // Lõi Ngôi Sao (Outer Mesh Wireframe)
+        const coreGeo = new THREE.SphereGeometry(4, 32, 32);
+        const coreMat = new THREE.MeshBasicMaterial({ color: 0x00f3ff, wireframe: true });
+        const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+        starGroup.add(coreMesh);
 
-        function adjustLayout() {
-            const width = window.innerWidth;
-            if (width < 768) {
-                baseScale = 0.55;
-                baseZPos = 40;
-                starGroup.position.set(0, 7, 0);
-            } else {
-                baseScale = 0.85;
-                baseZPos = 35;
-                starGroup.position.set(-14, 0, 0);
-            }
-            starGroup.scale.set(baseScale, baseScale, baseScale);
-            camera.position.set(0, 0, baseZPos);
-        }
+        // Lõi Trong Ngôi Sao (Solid Inner)
+        const innerGeo = new THREE.SphereGeometry(2.5, 24, 24);
+        const innerMat = new THREE.MeshBasicMaterial({ color: 0x7000ff, transparent: true, opacity: 0.8 });
+        const innerMesh = new THREE.Mesh(innerGeo, innerMat);
+        starGroup.add(innerMesh);
 
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        container.appendChild(renderer.domElement);
-
-        // Core Sphere
-        const coreGeometry = new THREE.SphereGeometry(5, 48, 48);
-        const coreMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00f3ff,
-            wireframe: true
-        });
-        const core = new THREE.Mesh(coreGeometry, coreMaterial);
-        starGroup.add(core);
-
-        // Inner Core
-        const innerGeo = new THREE.SphereGeometry(3.2, 32, 32);
-        const innerMat = new THREE.MeshBasicMaterial({
-            color: 0x7000ff,
-            transparent: true,
-            opacity: 0.85
-        });
-        const innerCore = new THREE.Mesh(innerGeo, innerMat);
-        starGroup.add(innerCore);
-
-        // Particle Swarm
-        const particleCount = window.innerWidth < 768 ? 1000 : 1800;
-        const geometry = new THREE.BufferGeometry();
-        const positions = new Float32Array(particleCount * 3);
+        // Hạt Hào Quang Xung Quanh Ngôi Sao
+        const particleCount = 800;
+        const pGeo = new THREE.BufferGeometry();
+        const pPos = new Float32Array(particleCount * 3);
 
         for (let i = 0; i < particleCount * 3; i += 3) {
-            const r = 6.5 + Math.random() * 7.5;
+            const r = 5 + Math.random() * 5;
             const theta = Math.random() * Math.PI * 2;
             const phi = Math.acos((Math.random() * 2) - 1);
 
-            positions[i] = r * Math.sin(phi) * Math.cos(theta);
-            positions[i+1] = r * Math.sin(phi) * Math.sin(theta);
-            positions[i+2] = r * Math.cos(phi);
+            pPos[i] = r * Math.sin(phi) * Math.cos(theta);
+            pPos[i+1] = r * Math.sin(phi) * Math.sin(theta);
+            pPos[i+2] = r * Math.cos(phi);
         }
 
-        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        const particleMaterial = new THREE.PointsMaterial({
-            size: 0.28,
-            color: 0x00f3ff,
-            transparent: true,
-            opacity: 0.75
-        });
-        const particles = new THREE.Points(geometry, particleMaterial);
-        starGroup.add(particles);
+        pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+        const pMat = new THREE.PointsMaterial({ size: 0.2, color: 0x00f3ff, transparent: true, opacity: 0.8 });
+        const particleSystem = new THREE.Points(pGeo, pMat);
+        starGroup.add(particleSystem);
 
-        // Rings
-        const ringGeo = new THREE.TorusGeometry(10.5, 0.1, 16, 80);
-        const ringMat = new THREE.MeshBasicMaterial({ color: 0x00f3ff, transparent: true, opacity: 0.45 });
+        // Vòng Xoay Bao Quanh
+        const ringGeo = new THREE.TorusGeometry(7, 0.08, 16, 60);
+        const ringMat = new THREE.MeshBasicMaterial({ color: 0x00f3ff, transparent: true, opacity: 0.5 });
         const ring1 = new THREE.Mesh(ringGeo, ringMat);
         const ring2 = new THREE.Mesh(ringGeo, ringMat);
         ring1.rotation.x = Math.PI / 3;
@@ -641,67 +582,45 @@
         starGroup.add(ring1);
         starGroup.add(ring2);
 
-        adjustLayout();
+        // Cập nhật Kích Thước Canvas theo Khung Chứa
+        function resizeStarCanvas() {
+            const width = starCanvasContainer.clientWidth;
+            const height = starCanvasContainer.clientHeight;
+            if (width > 0 && height > 0) {
+                camera.aspect = width / height;
+                camera.updateProjectionMatrix();
+                renderer.setSize(width, height);
+            }
+        }
 
-        // Animation Loop
-        function animate() {
-            requestAnimationFrame(animate);
-
-            core.rotation.y += 0.015;
-            core.rotation.x += 0.005;
-            innerCore.rotation.y -= 0.01;
-            particles.rotation.y += 0.002;
-            ring1.rotation.z += 0.004;
-            ring2.rotation.x += 0.004;
+        // Vòng lặp Animate
+        function animateStar() {
+            requestAnimationFrame(animateStar);
+            
+            starGroup.rotation.y += 0.008;
+            coreMesh.rotation.x += 0.005;
+            particleSystem.rotation.y -= 0.003;
+            ring1.rotation.z += 0.005;
+            ring2.rotation.x += 0.005;
 
             renderer.render(scene, camera);
         }
-        animate();
+        animateStar();
 
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            adjustLayout();
-        });
-
-        // --- 3. MENU NAVIGATION ---
-        document.getElementById('nav-overview').addEventListener('click', () => {
-            gsap.to(camera.position, { z: baseZPos - 18, duration: 2, ease: "power2.inOut" });
-            gsap.to(starGroup.scale, { x: baseScale * 1.8, y: baseScale * 1.8, z: baseScale * 1.8, duration: 2, ease: "power2.inOut" });
-        });
-
-        document.getElementById('nav-home').addEventListener('click', () => {
-            gsap.to(camera.position, { z: baseZPos, duration: 2, ease: "power2.inOut" });
-            gsap.to(starGroup.scale, { x: baseScale, y: baseScale, z: baseScale, duration: 2, ease: "power2.inOut" });
-        });
-
-        // --- 4. VIEW STAR BUTTON LOGIC & STAR DISPLAY REGION ---
+        // --- 3. XỬ LÝ SỰ KIỆN NÚT "VIEW STAR" VÀ ĐÓNG VÙNG HIỂN THỊ ---
         const btnViewStar = document.getElementById('btn-view-star');
         const btnCloseStar = document.getElementById('btn-close-star');
         const starDisplayRegion = document.getElementById('star-display-region');
 
         btnViewStar.addEventListener('click', () => {
-            // Mở vùng hiển thị thông tin Star
+            // Hiện vùng hiển thị
             starDisplayRegion.style.display = 'block';
             setTimeout(() => {
                 starDisplayRegion.style.opacity = '1';
+                resizeStarCanvas(); // Cập nhật tỉ lệ Canvas 3D
             }, 10);
 
-            // Phóng to quả cầu 3D để tập trung quan sát
-            gsap.to(starGroup.scale, {
-                x: baseScale * 2.2,
-                y: baseScale * 2.2,
-                z: baseScale * 2.2,
-                duration: 1.5,
-                ease: "power2.out"
-            });
-
-            // Đổi màu rực rỡ
-            gsap.to(coreMaterial.color, { r: 1.0, g: 0.8, b: 0.0, duration: 1 });
-            gsap.to(particleMaterial.color, { r: 1.0, g: 0.5, b: 0.0, duration: 1 });
-
-            // Cuộn xuống vùng hiển thị Star
+            // Cuộn mượt tới khu vực hiển thị Ngôi Sao
             starDisplayRegion.scrollIntoView({ behavior: 'smooth' });
         });
 
@@ -710,47 +629,9 @@
             setTimeout(() => {
                 starDisplayRegion.style.display = 'none';
             }, 500);
-
-            // Phục hồi kích thước và màu sắc ban đầu
-            gsap.to(starGroup.scale, { x: baseScale * 1.7, y: baseScale * 1.7, z: baseScale * 1.7, duration: 1.2 });
-            gsap.to(coreMaterial.color, { r: 1.0, g: 0.0, b: 0.33, duration: 1 });
-            gsap.to(particleMaterial.color, { r: 1.0, g: 0.2, b: 0.5, duration: 1 });
         });
 
-        // --- 5. GSAP SCROLLTRIGGER ---
-        gsap.registerPlugin(ScrollTrigger);
-
-        ScrollTrigger.create({
-            trigger: "#overview",
-            start: "top 70%",
-            end: "bottom 20%",
-            onEnter: () => {
-                gsap.to(coreMaterial.color, { r: 1.0, g: 0.0, b: 0.33, duration: 1.5 });
-                gsap.to(ringMat.color, { r: 1.0, g: 0.0, b: 0.33, duration: 1.5 });
-                gsap.to(particleMaterial.color, { r: 1.0, g: 0.2, b: 0.5, duration: 1.5 });
-                
-                gsap.to(starGroup.scale, {
-                    x: baseScale * 1.7,
-                    y: baseScale * 1.7,
-                    z: baseScale * 1.7,
-                    duration: 1.5,
-                    ease: "power2.out"
-                });
-            },
-            onLeaveBack: () => {
-                gsap.to(coreMaterial.color, { r: 0.0, g: 0.95, b: 1.0, duration: 1.5 });
-                gsap.to(ringMat.color, { r: 0.0, g: 0.95, b: 1.0, duration: 1.5 });
-                gsap.to(particleMaterial.color, { r: 0.0, g: 0.95, b: 1.0, duration: 1.5 });
-
-                gsap.to(starGroup.scale, {
-                    x: baseScale,
-                    y: baseScale,
-                    z: baseScale,
-                    duration: 1.5,
-                    ease: "power2.out"
-                });
-            }
-        });
+        window.addEventListener('resize', resizeStarCanvas);
     </script>
 </body>
 </html>
