@@ -86,7 +86,7 @@
             font-family: 'Orbitron', sans-serif;
         }
 
-        /* Navigation Menu Giữ Nguyên */
+        /* Navigation Menu */
         nav {
             position: fixed;
             top: 0;
@@ -132,7 +132,7 @@
             text-shadow: 0 0 8px var(--primary);
         }
 
-        /* Canvas 3D Cố định toàn màn hình Giữ Nguyên */
+        /* Canvas 3D Cố định toàn màn hình */
         #webgl-container {
             position: fixed;
             top: 0;
@@ -285,7 +285,7 @@
             font-size: 0.95rem;
         }
 
-        /* Card Ngoài Cùng: VIEW STAR */
+        /* Card VIEW STAR */
         .card-view-star {
             background: rgba(112, 0, 255, 0.25);
             border: 1px solid var(--primary);
@@ -314,7 +314,7 @@
             box-shadow: 0 0 25px rgba(0, 243, 255, 0.8);
         }
 
-        /* VÙNG HIỂN THỊ DÀNH RIÊNG CHO NGÔI SAO (STAR DISPLAY CONTAINER) */
+        /* VÙNG HIỂN THỊ STAR KHUNG RIÊNG */
         .star-display-region {
             position: relative;
             z-index: 2;
@@ -326,7 +326,7 @@
             border-radius: 16px;
             backdrop-filter: blur(16px);
             box-shadow: 0 0 40px rgba(0, 243, 255, 0.25);
-            display: none; /* Mặc định ẩn, hiện lên khi click View Star */
+            display: none;
             opacity: 0;
             transition: opacity 0.5s ease;
         }
@@ -360,10 +360,9 @@
             color: #ff0055;
         }
 
-        /* Khung chứa riêng Canvas vẽ Ngôi Sao */
         .star-preview-box {
             width: 100%;
-            height: 350px;
+            height: 380px;
             background: rgba(0, 0, 0, 0.6);
             border-radius: 12px;
             overflow: hidden;
@@ -405,7 +404,6 @@
             color: #fff;
         }
 
-        /* Responsive Layout Desktop */
         @media (min-width: 992px) {
             nav { padding: 1.2rem 3rem; }
             .logo { font-size: 1.8rem; }
@@ -437,7 +435,7 @@
         <div id="loading-text">INITIALIZING CORE SYSTEM... 0%</div>
     </div>
 
-    <!-- Navigation Menu (Giữ Nguyên) -->
+    <!-- Navigation Menu -->
     <nav>
         <div class="logo">E-STAR</div>
         <ul class="nav-links">
@@ -447,7 +445,7 @@
         </ul>
     </nav>
 
-    <!-- Canvas 3D Nền Cố Định Toàn Màn Hình (Giữ Nguyên) -->
+    <!-- Canvas 3D Background -->
     <div id="webgl-container"></div>
 
     <!-- Hero Section -->
@@ -505,7 +503,7 @@
                 </div>
             </div>
 
-            <!-- Nút VIEW STAR Ở Ngoài Cùng -->
+            <!-- Card VIEW STAR -->
             <div class="card card-view-star">
                 <div>
                     <i class="fa-solid fa-star" style="font-size: 2.2rem; color: #fff;"></i>
@@ -518,14 +516,13 @@
             </div>
         </div>
 
-        <!-- VÙNG CHIẾN DỊCH CHỈ ĐỂ HIỂN THỊ MỖI NGÔI SAO (STAR DISPLAY CONTAINER) -->
+        <!-- VÙNG HIỂN THỊ CỦA VIEW STAR -->
         <div class="star-display-region" id="star-display-region">
             <div class="star-display-header">
                 <h3><i class="fa-solid fa-star"></i> VÙNG XEM CHI TIẾT NGÔI SAO E-STAR</h3>
                 <button class="close-display-btn" id="btn-close-star"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
-            <!-- Khung vẽ độc lập Ngôi Sao 3D -->
             <div class="star-preview-box" id="star-preview-box"></div>
 
             <div class="star-info-grid">
@@ -573,7 +570,7 @@
             }
         }, 100);
 
-        // --- 2. MAIN 3D SCENE BACKGROUND (Mô hình cũ tràn nền) ---
+        // --- 2. MAIN 3D SCENE BACKGROUND ---
         const container = document.getElementById('webgl-container');
         const mainScene = new THREE.Scene();
         const mainCamera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -635,7 +632,7 @@
         const particles = new THREE.Points(geometry, particleMaterial);
         mainStarGroup.add(particles);
 
-        // Rings
+        // Rings (Quỹ đạo ngoài)
         const ringGeo = new THREE.TorusGeometry(10.5, 0.1, 16, 80);
         const ringMat = new THREE.MeshBasicMaterial({ color: 0x00f3ff, transparent: true, opacity: 0.45 });
         const ring1 = new THREE.Mesh(ringGeo, ringMat);
@@ -670,7 +667,7 @@
             gsap.to(mainStarGroup.scale, { x: baseScale, y: baseScale, z: baseScale, duration: 2, ease: "power2.inOut" });
         });
 
-        // --- 4. GSAP SCROLLTRIGGER FOR MAIN BACKGROUND ---
+        // --- 4. GSAP SCROLLTRIGGER ---
         gsap.registerPlugin(ScrollTrigger);
 
         ScrollTrigger.create({
@@ -691,11 +688,11 @@
             }
         });
 
-        // --- 5. TẠO KHUNG CẢNH 3D RIÊNG TRONG VÙNG HIỂN THỊ STAR (STAR PREVIEW) ---
+        // --- 5. TẠO SCENE 3D RIÊNG CHO VÙNG VIEW STAR (ĐÃ BỔ SUNG CÁC VÒNG QUỸ ĐẠO TIA) ---
         const starBox = document.getElementById('star-preview-box');
         const starScene = new THREE.Scene();
         const starCamera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
-        starCamera.position.z = 22;
+        starCamera.position.z = 24;
 
         const starRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         starRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -704,23 +701,24 @@
         const subStarGroup = new THREE.Group();
         starScene.add(subStarGroup);
 
-        // Core Ngôi Sao Độc Lập
+        // Core Lõi
         const subCoreGeo = new THREE.SphereGeometry(3.5, 32, 32);
         const subCoreMat = new THREE.MeshBasicMaterial({ color: 0x00f3ff, wireframe: true });
         const subCore = new THREE.Mesh(subCoreGeo, subCoreMat);
         subStarGroup.add(subCore);
 
+        // Core Trong
         const subInnerGeo = new THREE.SphereGeometry(2.2, 24, 24);
         const subInnerMat = new THREE.MeshBasicMaterial({ color: 0x7000ff, transparent: true, opacity: 0.85 });
         const subInner = new THREE.Mesh(subInnerGeo, subInnerMat);
         subStarGroup.add(subInner);
 
-        // Hào quang
-        const subPCount = 600;
+        // Hạt Hào Quang
+        const subPCount = 800;
         const subPGeo = new THREE.BufferGeometry();
         const subPPos = new Float32Array(subPCount * 3);
         for (let i = 0; i < subPCount * 3; i += 3) {
-            const r = 4.5 + Math.random() * 4;
+            const r = 4.5 + Math.random() * 5.5;
             const theta = Math.random() * Math.PI * 2;
             const phi = Math.acos((Math.random() * 2) - 1);
             subPPos[i] = r * Math.sin(phi) * Math.cos(theta);
@@ -731,6 +729,16 @@
         const subPMat = new THREE.PointsMaterial({ size: 0.22, color: 0x00f3ff, transparent: true, opacity: 0.8 });
         const subParticles = new THREE.Points(subPGeo, subPMat);
         subStarGroup.add(subParticles);
+
+        // BỔ SUNG: 2 Vòng Quỹ Đạo Vòng Xoay (Rings) Cho Vùng View Star
+        const subRingGeo = new THREE.TorusGeometry(7.5, 0.08, 16, 80);
+        const subRingMat = new THREE.MeshBasicMaterial({ color: 0x00f3ff, transparent: true, opacity: 0.6 });
+        const subRing1 = new THREE.Mesh(subRingGeo, subRingMat);
+        const subRing2 = new THREE.Mesh(subRingGeo, subRingMat);
+        subRing1.rotation.x = Math.PI / 3;
+        subRing2.rotation.y = Math.PI / 4;
+        subStarGroup.add(subRing1);
+        subStarGroup.add(subRing2);
 
         function resizeStarPreview() {
             const width = starBox.clientWidth;
@@ -746,12 +754,14 @@
             requestAnimationFrame(animateStarPreview);
             subStarGroup.rotation.y += 0.01;
             subCore.rotation.x += 0.005;
-            subParticles.rotation.y -= 0.004;
+            subParticles.rotation.y -= 0.003;
+            subRing1.rotation.z += 0.005;
+            subRing2.rotation.x += 0.005;
             starRenderer.render(starScene, starCamera);
         }
         animateStarPreview();
 
-        // --- 6. EVENT LISTENER NÚT VIEW STAR & ĐÓNG VÙNG HIỂN THỊ ---
+        // --- 6. SU KIEN NÚT VIEW STAR ---
         const btnViewStar = document.getElementById('btn-view-star');
         const btnCloseStar = document.getElementById('btn-close-star');
         const starDisplayRegion = document.getElementById('star-display-region');
