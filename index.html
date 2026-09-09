@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Star - Celestial Core</title>
+    <!-- Font Framework & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <!-- Three.js for 3D Render -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    
+    <style>
+        :root {
+            --primary: #00f3ff;
+            --secondary: #7000ff;
+            --bg: #030712;
+            --panel-bg: rgba(15, 23, 42, 0.75);
+            --text: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        /* Navigation Menu */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.2rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--primary);
+            text-shadow: 0 0 12px var(--primary);
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--primary);
+            text-shadow: 0 0 8px var(--primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: var(--primary);
+            transition: 0.3s;
+            box-shadow: 0 0 8px var(--primary);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section & 3D Container */
+        .hero {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        #webgl-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            margin-left: 5%;
+            max-width: 500px;
+            background: var(--panel-bg);
+            padding: 2.5rem;
+            border-radius: 16px;
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.15);
+        }
+
+        .hero-content h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            letter-spacing: 3px;
+        }
+
+        .hero-content .subtitle {
+            color: var(--primary);
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+        }
+
+        .hero-content p {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: #cbd5e1;
+            margin-bottom: 2rem;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: linear-gradient(45deg, var(--secondary), var(--primary));
+            color: #fff;
+            text-decoration: none;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(112, 0, 255, 0.5);
+            transition: 0.3s;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.8);
+        }
+
+        /* HUD Specs Section */
+        .specs-section {
+            position: relative;
+            z-index: 2;
+            padding: 5rem 5%;
+            background: linear-gradient(to bottom, transparent, var(--bg));
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.2rem;
+            text-align: center;
+            color: #fff;
+            margin-bottom: 3rem;
+            text-shadow: 0 0 10px var(--primary);
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--panel-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+        }
+
+        .card i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .card h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            color: #fff;
+        }
+
+        .card p {
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav { padding: 1rem 1.5rem; }
+            .nav-links { display: none; }
+            .hero-content { margin: 0 1.5rem; max-width: 100%; }
+            .hero-content h1 { font-size: 2.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">E-STAR</div>
+        <ul class="nav-links">
+            <li><a href="#home" class="active">Trang Chủ</a></li>
+            <li><a href="#overview">Tổng Quan</a></li>
+            <li><a href="#specs">Thông Số</a></li>
+            <li><a href="#applications">Ứng Dụng</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section with Interactive 3D Canvas -->
+    <section class="hero" id="home">
+        <div id="webgl-container"></div>
+        
+        <div class="hero-content">
+            <h1>E-STAR</h1>
+            <div class="subtitle">THIÊN THỂ SIÊU NÉN LƯỢNG TỬ</div>
+            <p>Mô hình cỗ máy năng lượng vũ trụ bán kính 15m. Hoạt động dựa trên lõi quay 16.8 triệu vòng/giây cùng vùng nhiệt độ âm lượng tử, giải phóng dòng hạt sơ cấp vô hạn.</p>
+            <a href="#specs" class="cta-btn"><i class="fa-solid fa-microchip"></i> KHÁM PHÁ THÔNG SỐ</a>
+        </div>
+    </section>
+
+    <!-- Specifications Grid -->
+    <section class="specs-section" id="specs">
+        <h2 class="section-title">THÔNG SỐ KỸ THUẬT VẬT LÝ</h2>
+        <div class="grid-container">
+            <div class="card">
+                <i class="fa-solid fa-atom"></i>
+                <h3>Kích Thước & Mật Độ</h3>
+                <p>Bán kính vỏ ngoài cố định 15m. Khối lượng tập trung cực hạn tạo độ dốc trọng lực cao và lực đệm Meissner.</p>
+            </div>
+            <div class="card">
+                <i class="fa-solid fa-rotate-right"></i>
+                <h3>Lõi Quay Tốc Độ Cao</h3>
+                <p>Tốc độ quay 16,8 triệu vòng/giây (16,8 MHz) phát ra sóng điện từ cao tần và dải từ trường biến thiên cực đại.</p>
+            </div>
+            <div class="card">
+                <i class="fa-solid fa-temperature-arrow-down"></i>
+                <h3>Nhiệt Độ Âm Lượng Tử</h3>
+                <p>Duy trì môi trường siêu dẫn tại -500.000°C, triệt tiêu sự tỏa nhiệt thông thường và giữ ổn định liên kết hạt.</p>
+            </div>
+            <div class="card">
+                <i class="fa-solid fa-magnet"></i>
+                <h3>Từ Trường Bẫy >200B</h3>
+                <p>Khung từ trường khổng lồ giữ dải proton (p+) và electron (e-) tạo quầng sáng huỳnh quang xanh lam đặc trưng.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3D Engine Script (Three.js) -->
+    <script>
+        // Setup Three.js Scene
+        const container = document.getElementById('webgl-container');
+        const scene = new THREE.Scene();
+        
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(20, 10, 35);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        container.appendChild(renderer.domElement);
+
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.maxDistance = 80;
+        controls.minDistance = 10;
+
+        // E-Star Core (Sphere)
+        const coreGeometry = new THREE.SphereGeometry(6, 64, 64);
+        const coreMaterial = new THREE.MeshBasicMaterial({
+            color: 0x00f3ff,
+            wireframe: true
+        });
+        const core = new THREE.Mesh(coreGeometry, coreMaterial);
+        scene.add(core);
+
+        // Inner Glowing Core
+        const innerGeo = new THREE.SphereGeometry(4.5, 32, 32);
+        const innerMat = new THREE.MeshBasicMaterial({
+            color: 0x7000ff,
+            transparent: true,
+            opacity: 0.8
+        });
+        const innerCore = new THREE.Mesh(innerGeo, innerMat);
+        scene.add(innerCore);
+
+        // Particle Swarm (Plasma Fog)
+        const particleCount = 2000;
+        const geometry = new THREE.BufferGeometry();
+        const positions = new Float32Array(particleCount * 3);
+        const colors = new Float32Array(particleCount * 3);
+
+        for (let i = 0; i < particleCount * 3; i += 3) {
+            const r = 8 + Math.random() * 12;
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos((Math.random() * 2) - 1);
+
+            positions[i] = r * Math.sin(phi) * Math.cos(theta);
+            positions[i+1] = r * Math.sin(phi) * Math.sin(theta);
+            positions[i+2] = r * Math.cos(phi);
+
+            colors[i] = 0.0; // R
+            colors[i+1] = 0.95; // G
+            colors[i+2] = 1.0; // B
+        }
+
+        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+        const particleMaterial = new THREE.PointsMaterial({
+            size: 0.3,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.8
+        });
+
+        const particles = new THREE.Points(geometry, particleMaterial);
+        scene.add(particles);
+
+        // Magnetic Field Rings
+        const ringGeo = new THREE.TorusGeometry(14, 0.1, 16, 100);
+        const ringMat = new THREE.MeshBasicMaterial({ color: 0x00f3ff, transparent: true, opacity: 0.4 });
+        const ring1 = new THREE.Mesh(ringGeo, ringMat);
+        const ring2 = new THREE.Mesh(ringGeo, ringMat);
+        ring1.rotation.x = Math.PI / 3;
+        ring2.rotation.y = Math.PI / 4;
+        scene.add(ring1);
+        scene.add(ring2);
+
+        // Ambient Light
+        const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+        scene.add(ambientLight);
+
+        // Animation Loop
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Core high-speed rotation simulation
+            core.rotation.y += 0.02;
+            core.rotation.x += 0.005;
+            innerCore.rotation.y -= 0.01;
+
+            // Rotate particle field & rings
+            particles.rotation.y += 0.003;
+            ring1.rotation.z += 0.005;
+            ring2.rotation.x += 0.005;
+
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // Handle Window Resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
