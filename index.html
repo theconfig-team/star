@@ -86,25 +86,25 @@
             font-family: 'Orbitron', sans-serif;
         }
 
-        /* Navigation Menu */
+        /* Navigation Menu (Headbar) */
         nav {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            padding: 1rem 1.5rem;
+            padding: 0.8rem 1.2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 100;
-            background: rgba(3, 7, 18, 0.7);
+            background: rgba(3, 7, 18, 0.8);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(0, 243, 255, 0.2);
         }
 
         .logo {
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 900;
             color: var(--primary);
             text-shadow: 0 0 12px var(--primary);
@@ -113,14 +113,15 @@
 
         .nav-links {
             display: flex;
-            gap: 1.2rem;
+            align-items: center;
+            gap: 1rem;
             list-style: none;
         }
 
         .nav-links a {
             color: var(--text);
             text-decoration: none;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -130,6 +131,29 @@
         .nav-links a:hover {
             color: var(--primary);
             text-shadow: 0 0 8px var(--primary);
+        }
+
+        /* Nút VIEW STAR đặt trên Headbar */
+        .headbar-view-star-btn {
+            padding: 0.4rem 0.9rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border: none;
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 0.75rem;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 0 12px rgba(0, 243, 255, 0.4);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .headbar-view-star-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.8);
         }
 
         /* Canvas 3D Cố định toàn màn hình */
@@ -285,35 +309,6 @@
             font-size: 0.95rem;
         }
 
-        /* Card VIEW STAR */
-        .card-view-star {
-            background: rgba(112, 0, 255, 0.25);
-            border: 1px solid var(--primary);
-            align-items: center;
-            text-align: center;
-        }
-
-        .view-star-btn {
-            margin-top: 1rem;
-            width: 100%;
-            padding: 0.8rem 1rem;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            border: none;
-            color: #fff;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            font-size: 0.85rem;
-            border-radius: 8px;
-            cursor: pointer;
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
-            transition: all 0.3s ease;
-        }
-
-        .view-star-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 25px rgba(0, 243, 255, 0.8);
-        }
-
         /* VÙNG HIỂN THỊ STAR KHUNG RIÊNG */
         .star-display-region {
             position: relative;
@@ -405,9 +400,10 @@
         }
 
         @media (min-width: 992px) {
-            nav { padding: 1.2rem 3rem; }
+            nav { padding: 1rem 3rem; }
             .logo { font-size: 1.8rem; }
-            .nav-links a { font-size: 1.1rem; }
+            .nav-links a { font-size: 1rem; }
+            .headbar-view-star-btn { font-size: 0.85rem; padding: 0.5rem 1.2rem; }
             .hero {
                 justify-content: center;
                 align-items: flex-end;
@@ -435,13 +431,19 @@
         <div id="loading-text">INITIALIZING CORE SYSTEM... 0%</div>
     </div>
 
-    <!-- Navigation Menu -->
+    <!-- Navigation Menu (Headbar) -->
     <nav>
         <div class="logo">E-STAR</div>
         <ul class="nav-links">
             <li><a href="#home" id="nav-home">Trang Chủ</a></li>
             <li><a href="#overview" id="nav-overview">Tổng Quan</a></li>
             <li><a href="#specs">Thông Số</a></li>
+            <!-- NÚT VIEW STAR ĐÃ ĐƯỢC ĐẶT LÊN HEADBAR -->
+            <li>
+                <button class="headbar-view-star-btn" id="btn-view-star">
+                    <i class="fa-solid fa-star"></i> VIEW STAR
+                </button>
+            </li>
         </ul>
     </nav>
 
@@ -484,7 +486,7 @@
             <div class="card">
                 <div>
                     <i class="fa-solid fa-rotate-right"></i>
-                    <h3>Lõi Quay Tốc Độ Cao</h3>
+                    <h3>Lõi Quay Tốc Tốc Độ Cao</h3>
                     <p>Tốc độ quay 16,8 triệu vòng/giây (16,8 MHz) phát ra sóng điện từ cao tần và dải từ trường biến thiên cực đại.</p>
                 </div>
             </div>
@@ -501,18 +503,6 @@
                     <h3>Từ Trường Bẫy >200B</h3>
                     <p>Khung từ trường khổng lồ giữ dải proton (p+) và electron (e-) tạo quầng sáng huỳnh quang xanh lam đặc trưng.</p>
                 </div>
-            </div>
-
-            <!-- Card VIEW STAR -->
-            <div class="card card-view-star">
-                <div>
-                    <i class="fa-solid fa-star" style="font-size: 2.2rem; color: #fff;"></i>
-                    <h3>XEM STAR ISOLATED</h3>
-                    <p>Kích hoạt vùng hiển thị chuyên biệt chỉ để xem chi tiết Ngôi Sao E-Star.</p>
-                </div>
-                <button class="view-star-btn" id="btn-view-star">
-                    <i class="fa-solid fa-eye"></i> VIEW STAR
-                </button>
             </div>
         </div>
 
@@ -632,7 +622,7 @@
         const particles = new THREE.Points(geometry, particleMaterial);
         mainStarGroup.add(particles);
 
-        // Rings (Quỹ đạo ngoài)
+        // Rings (Quyst đạo ngoài)
         const ringGeo = new THREE.TorusGeometry(10.5, 0.1, 16, 80);
         const ringMat = new THREE.MeshBasicMaterial({ color: 0x00f3ff, transparent: true, opacity: 0.45 });
         const ring1 = new THREE.Mesh(ringGeo, ringMat);
@@ -688,7 +678,7 @@
             }
         });
 
-        // --- 5. TẠO SCENE 3D RIÊNG CHO VÙNG VIEW STAR (ĐÃ BỔ SUNG CÁC VÒNG QUỸ ĐẠO TIA) ---
+        // --- 5. TẠO SCENE 3D RIÊNG CHO VÙNG VIEW STAR ---
         const starBox = document.getElementById('star-preview-box');
         const starScene = new THREE.Scene();
         const starCamera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
@@ -730,7 +720,7 @@
         const subParticles = new THREE.Points(subPGeo, subPMat);
         subStarGroup.add(subParticles);
 
-        // BỔ SUNG: 2 Vòng Quỹ Đạo Vòng Xoay (Rings) Cho Vùng View Star
+        // 2 Vòng Quỹ Đạo Vòng Xoay (Rings)
         const subRingGeo = new THREE.TorusGeometry(7.5, 0.08, 16, 80);
         const subRingMat = new THREE.MeshBasicMaterial({ color: 0x00f3ff, transparent: true, opacity: 0.6 });
         const subRing1 = new THREE.Mesh(subRingGeo, subRingMat);
@@ -761,7 +751,7 @@
         }
         animateStarPreview();
 
-        // --- 6. SU KIEN NÚT VIEW STAR ---
+        // --- 6. SỰ KIỆN NÚT VIEW STAR TRÊN HEADBAR ---
         const btnViewStar = document.getElementById('btn-view-star');
         const btnCloseStar = document.getElementById('btn-close-star');
         const starDisplayRegion = document.getElementById('star-display-region');
